@@ -72,26 +72,26 @@ document.getElementById('generate-pass-btn').addEventListener('click', () => {
     if (wordsArray.length === 0) return;
 
     const wordCount = parseInt(document.getElementById('pass-words').value) || 3;
-    const minLength = parseInt(document.getElementById('pass-min-length').value) || 16;
+    
+    // OWASP Hardened: Parses numeric field and clamps strictly between 8 and 64
+    let rawMinLen = parseInt(document.getElementById('pass-min-length').value) || 16;
+    const minLength = Math.min(Math.max(rawMinLen, 8), 64);
     
     const specStart = document.getElementById('pass-spec-start').checked;
     const specEnd = document.getElementById('pass-spec-end').checked;
     const capStart = document.getElementById('pass-cap-start').checked;
     const capEnd = document.getElementById('pass-cap-end').checked;
     const useLeet = document.getElementById('pass-leet').checked;
-    const useSeparator = document.getElementById('pass-sep-special').checked; // Grabbed UI state
+    const useSeparator = document.getElementById('pass-sep-special').checked;
 
     const getRandomSpecial = () => specialChars[Math.floor(Math.random() * specialChars.length)];
 
     let selectedWords = [];
     let totalLength = 0;
 
-    // 1. Pick words & calculate real-time length (including projected separators)
     while (selectedWords.length < wordCount || totalLength < minLength) {
         const randomIdx = Math.floor(Math.random() * wordsArray.length);
-        
-        // Layer 1 Defense: .trim() destroys outer spaces immediately
-        let w = wordsArray[randomIdx].trim().toLowerCase(); 
+        let w = wordsArray[randomIdx].trim().toLowerCase();
         
         if (capStart && w.length > 0) {
             w = w.charAt(0).toUpperCase() + w.slice(1);
@@ -104,15 +104,12 @@ document.getElementById('generate-pass-btn').addEventListener('click', () => {
 
         selectedWords.push(w);
         
-        // Math check: N words require (N - 1) separators
         const projectedSepChars = useSeparator ? Math.max(0, selectedWords.length - 1) : 0;
         totalLength = selectedWords.join('').length + projectedSepChars;
     }
 
-    // 2. Layer 2 Defense: Assemble phrase
     let phrase = '';
     if (useSeparator) {
-        // Injects a brand new random char into every individual gap
         phrase = selectedWords.reduce((acc, word, idx) => {
             return idx === 0 ? word : acc + getRandomSpecial() + word;
         }, '');
@@ -120,20 +117,16 @@ document.getElementById('generate-pass-btn').addEventListener('click', () => {
         phrase = selectedWords.join('');
     }
 
-    // 3. Apply Leetspeak
     if (useLeet) {
         phrase = phrase.split('').map(char => leetMap[char] || char).join('');
     }
 
-    // 4. Attach Start/End Specials
     if (specStart) phrase = getRandomSpecial() + phrase;
     if (specEnd) phrase = phrase + getRandomSpecial();
 
-    // 5. Layer 3 Defense: The RegEx Guillotine 
-    // Scans string; hunts down any inner space leaking from dictionary words and replaces it
+    // Sanitization Trap: destroys hidden spaces inside compound dictionary words
     phrase = phrase.replace(/\s/g, () => getRandomSpecial());
 
-    // Push to Terminal UI
     document.getElementById('pass-output').value = phrase;
     document.getElementById('pass-length-display').textContent = `[${phrase.length} CHARS]`;
 });
@@ -198,7 +191,6 @@ function generateDefaultNames() {
     names = Array.from({length: count}, (_, i) => `TARGET_${i+1}`);
 }
 
-// FIX: Listen for changes to the segment count input to dynamically add/remove fields
 segmentInput.addEventListener('change', (e) => {
     const newCount = Math.min(Math.max(parseInt(e.target.value) || 1, 1), 48);
     
@@ -337,8 +329,6 @@ function calculateWinner() {
       names.splice(winningSegmentIdx, 1); 
       winningSegmentIdx = -1; 
       showResultVisuals = false; 
-      
-      // Keep segment input aligned with remaining names array
       segmentInput.value = names.length;
       updateInputs(true); 
     }, 2500);
@@ -374,15 +364,12 @@ updateBtn.addEventListener('click', () => {
   historyLog = []; 
   updateHistoryTable(); 
   noHistoryMsg.style.display = 'block';
-  
-  // Resets array back to the number specified in the input
   generateDefaultNames(); 
   updateInputs(); 
   rotation = 0; 
   spinPlayBtn.classList.remove('spinning-state');
 });
 
-// FIX: Date-formatted PNG Export
 downloadBtn.addEventListener('click', () => {
     html2canvas(document.getElementById('capture-area')).then(canvas => {
         const link = document.createElement('a'); 
