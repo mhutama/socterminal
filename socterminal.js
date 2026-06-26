@@ -390,4 +390,138 @@ downloadBtn.addEventListener('click', () => {
     });
 });
 
+// ==========================================
+// SECURE FORENSIC INGESTION ENGINE (OWASP Safe)
+// ==========================================
+
+function initSecureDropzone(cfg) {
+    const zone = document.getElementById(cfg.zoneId);
+    const input = document.getElementById(cfg.inputId);
+    const warnEl = document.getElementById(cfg.warnId);
+    const manifestEl = document.getElementById(cfg.manifestId);
+
+    if (!zone || !input) return;
+
+    const triggerWarning = (text) => {
+        warnEl.textContent = `[SYS_WARN]: ${text}`;
+        warnEl.classList.remove('hidden');
+    };
+
+    const clearWarning = () => {
+        warnEl.textContent = '';
+        warnEl.classList.add('hidden');
+    };
+
+    const processPayload = (fileList) => {
+        clearWarning();
+        const accepted = [];
+        const rejected = [];
+
+        Array.from(fileList).forEach(file => {
+            const lowerName = file.name.toLowerCase();
+            const isAuthorized = cfg.allowedExts.some(ext => lowerName.endsWith(ext));
+
+            if (isAuthorized) {
+                accepted.push(file);
+            } else {
+                rejected.push(file.name);
+            }
+        });
+
+        // Fire alert for ignored formats
+        if (rejected.length > 0) {
+            triggerWarning(`Ignored unauthorized format(s): [ ${rejected.join(', ')} ]. Strictly expecting: ${cfg.allowedExts.join(' ')}`);
+        }
+
+        // Render Manifest safely
+        if (manifestEl && accepted.length > 0) {
+            manifestEl.textContent = ''; // OWASP safe DOM purge
+            
+            accepted.forEach(f => {
+                const row = document.createElement('div');
+                row.className = 'manifest-row';
+                
+                const isEncryptedArchive = f.name.endsWith('.zip') || f.name.endsWith('.7z');
+                const tag = isEncryptedArchive ? '[CONTAINER: ENCRYPTED]' : '[MOUNTED]';
+                
+                // .textContent prevents XSS via filename execution
+                row.textContent = `${tag} ${f.name} — (${(f.size / 1024).toFixed(2)} KB)`;
+                manifestEl.appendChild(row);
+            });
+        }
+
+        if (cfg.onSuccess && accepted.length > 0) {
+            cfg.onSuccess(accepted);
+        }
+    };
+
+    // UI Click Dispatcher
+    zone.addEventListener('click', () => input.click());
+    input.addEventListener('change', (e) => processPayload(e.target.files));
+
+    // Drag and Drop Telemetry
+    ['dragenter', 'dragover'].forEach(eName => {
+        zone.addEventListener(eName, (e) => {
+            e.preventDefault();
+            zone.classList.add('active-drag');
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eName => {
+        zone.addEventListener(eName, (e) => {
+            e.preventDefault();
+            zone.classList.remove('active-drag');
+        });
+    });
+
+    zone.addEventListener('drop', (e) => {
+        processPayload(e.dataTransfer.files);
+    });
+}
+
+// Instantiate the 3 Intake Zones on boot
+window.addEventListener('DOMContentLoaded', () => {
+
+    // 1. Mail Zone
+    initSecureDropzone({
+        zoneId: 'zone-mail',
+        inputId: 'input-mail',
+        warnId: 'warn-mail',
+        manifestId: 'manifest-mail',
+        allowedExts: ['.eml', '.msg', '.zip', '.7z']
+    });
+
+    // 2. File Inspector Zone
+    initSecureDropzone({
+        zoneId: 'zone-doc',
+        inputId: 'input-doc',
+        warnId: 'warn-doc',
+        manifestId: 'manifest-doc',
+        allowedExts: ['.doc', '.docx', '.docm', '.xls', '.xlsx', '.xlsm', '.pdf', '.vbs', '.ps1', '.zip', '.7z']
+    });
+
+    // 3. IOC Enricher Zone (With auto-piping to Textarea)
+    initSecureDropzone({
+        zoneId: 'zone-bvc',
+        inputId: 'input-bvc',
+        warnId: 'warn-bvc',
+        allowedExts: ['.csv', '.txt'],
+        onSuccess: (files) => {
+            const targetFile = files[0]; // Take primary file
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                const content = e.target.result;
+                const textarea = document.getElementById('bvc-input');
+                if (textarea) {
+                    textarea.value = content.trim();
+                    // Trigger floating label lift visually
+                    textarea.dispatchEvent(new Event('input'));
+                }
+            };
+            reader.readAsText(targetFile);
+        }
+    });
+});
+
 window.addEventListener('DOMContentLoaded', initWheel);
