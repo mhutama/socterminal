@@ -252,13 +252,20 @@
 
   </main>
 
-  <footer class="spa-footer">
-    <div class="footer-content">
-      <span style="color: var(--primary-color);">SYSTEM_UPTIME: </span>
-      <span id="uptime-days" style="color: var(--secondary-color); font-weight: bold;">0</span>
-      <span style="color: var(--primary-color);"> DAYS</span>
-    </div>
-  </footer>
+	<footer class="spa-footer">
+		<div class="footer-section">
+		  <span style="color: var(--primary-color);">SYS_TIME: </span>
+		  <span id="clock-utc" style="color: var(--text-main);"></span> <span style="opacity: 0.3; margin: 0 8px;">|</span>
+		  <span id="clock-utc3" style="color: var(--text-main);"></span> <span style="opacity: 0.3; margin: 0 8px;">|</span>
+		  <span id="clock-utc7" style="color: var(--secondary-color); font-weight: bold;"></span>
+		</div>
+		
+		<div class="footer-section">
+		  <span style="color: var(--primary-color);">SYSTEM_UPTIME: </span>
+		  <span id="uptime-days" style="color: var(--secondary-color); font-weight: bold;">0</span>
+		  <span style="color: var(--primary-color);"> DAYS</span>
+		</div>
+	</footer>
 </div>
 
 </body>
