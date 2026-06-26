@@ -118,8 +118,18 @@
                 <option value="8">8 CHARACTERS</option>
                 <option value="12">12 CHARACTERS</option>
                 <option value="16" selected>16 CHARACTERS</option>
+                <option value="22">22 CHARACTERS</option>
                 <option value="24">24 CHARACTERS</option>
-                <option value="32">32 CHARACTERS</option>
+                <option value="30">30 CHARACTERS</option>
+                <option value="34">34 CHARACTERS</option>
+                <option value="38">38 CHARACTERS</option>
+                <option value="42">42 CHARACTERS</option>
+                <option value="46">46 CHARACTERS</option>
+                <option value="50">50 CHARACTERS</option>				
+                <option value="54">54 CHARACTERS</option>
+                <option value="58">58 CHARACTERS</option>
+                <option value="62">62 CHARACTERS</option>
+                <option value="66">66 CHARACTERS</option>				
               </select>
               <label for="pass-min-length" class="form-label select-label">MIN_LENGTH</label>
             </div>
@@ -151,10 +161,15 @@
             </div>
           </div>
 
-          <div class="checkbox-wrapper mb-4">
+          <div class="checkbox-wrapper mb-4" style="display: flex; flex-direction: column; gap: 0.75rem;">
             <label class="custom-checkbox-label">
               <input type="checkbox" id="pass-leet" class="custom-checkbox">
               <span class="checkbox-text">ENABLE_LEETSPEAK_SUBSTITUTION (e.g. e->3, A->4)</span>
+            </label>
+            
+            <label class="custom-checkbox-label">
+              <input type="checkbox" id="pass-sep-special" class="custom-checkbox" checked>
+              <span class="checkbox-text">USE_RANDOM_SPECIAL_CHAR_AS_WORD_SEPARATOR</span>
             </label>
           </div>
 
@@ -170,7 +185,7 @@
 
           <button type="button" class="antigravity-btn full-width" id="generate-pass-btn">
             <span></span><span></span><span></span><span></span>
-            <span class="btn-text">GENERATE</span>
+            <span class="btn-text">GENERATE_ENTROPY</span>
           </button>
 
         </div>
