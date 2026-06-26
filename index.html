@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,15 @@
 
   <link rel="stylesheet" href="style.css">
   
-  <!-- OWASP Mitigation: Subresource Integrity (SRI) for external libraries -->
+  <!-- Layout Override: Forces Widescreen Full-View on all panels -->
+  <style>
+    .content-panel {
+      max-width: 96% !important;
+      width: 100%;
+    }
+  </style>
+
+  <!-- OWASP Mitigation: Subresource Integrity (SRI) for external library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQmJb1OcdXV43TzVvXU/6o/D7fG1F/GtdA2bQilU1Oa49FqV2nZ3Q7I1sOa+G5Bq1wQf+O3O8OqZ1wA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   
   <!-- External Logic File -->
@@ -19,7 +27,7 @@
 <body>
 
 <div class="spa-wrapper">
-  <!-- Tab Controllers -->
+  <!-- Master Tab Controllers (Incident Response Triage Sequence) -->
   <input type="radio" name="terminal-tabs" id="tab-email" checked>
   <input type="radio" name="terminal-tabs" id="tab-doc">
   <input type="radio" name="terminal-tabs" id="tab-bvc">
@@ -43,13 +51,15 @@
       <label for="tab-doc" class="nav-btn btn-doc" data-text="FILE_INSPECTOR">FILE_INSPECTOR</label>
       <label for="tab-bvc" class="nav-btn btn-bvc" data-text="IOC_ENRICHER">IOC_ENRICHER</label>
       <label for="tab-pass" class="nav-btn btn-pass" data-text="PASS_GENERATOR">PASS_GENERATOR</label>
-      <label for="tab-wheel" class="nav-btn btn-wheel" data-text="WHEEL_OF_SPIN">WHEEL_OF_SPIN</label>
+      <label for="tab-wheel" class="nav-btn btn-wheel" data-text="SHIFT_SELECTOR">SHIFT_SELECTOR</label>
     </nav>
   </header>
 
   <main class="spa-content">
     
-<!-- 1. MAIL ANALYZER -->
+    <!-- ==========================================
+         1. MAIL ANALYZER
+         ========================================== -->
     <section class="content-panel panel-email">
       <div class="glitch-card">
         <div class="card-header">
@@ -59,14 +69,13 @@
         <div class="card-body">
           <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Static analysis engine for inspecting email headers, SPF/DKIM records, body content, and extracting embedded indicators.</p>
           
-          <!-- Cyber Dropzone -->
           <div class="cyber-dropzone" id="zone-mail">
             <input type="file" id="input-mail" class="hidden-input" accept=".eml,.msg,.zip,.7z" multiple>
             <div class="dropzone-label">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16.5V9m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/></svg>
               <span class="main-prompt">[ INGEST_EVIDENTIAL_MAIL ]</span>
               <span class="sub-prompt">DRAG & DROP OR <span class="highlight">CLICK TO BROWSE</span></span>
-              <span class="allowed-tag">ALLOWED: .eml | .msg | .zip (Encrypted) | .7z (Encrypted)</span>
+              <span class="allowed-tag">ALLOWED: .eml | .msg | Encrypted Archives (.zip/.7z)</span>
             </div>
           </div>
 
@@ -76,7 +85,9 @@
       </div>
     </section>
 
-    <!-- 2. FILE INSPECTOR -->
+    <!-- ==========================================
+         2. FILE INSPECTOR
+         ========================================== -->
     <section class="content-panel panel-doc">
       <div class="glitch-card">
         <div class="card-header">
@@ -92,7 +103,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
               <span class="main-prompt">[ MOUNT_SUSPICIOUS_ARTIFACT ]</span>
               <span class="sub-prompt">DRAG & DROP OR <span class="highlight">CLICK TO BROWSE</span></span>
-              <span class="allowed-tag">ALLOWED: Office (.doc* / .xls*) | .pdf | .vbs | .ps1 | Archives (.zip/.7z)</span>
+              <span class="allowed-tag">ALLOWED: Office (.doc* / .xls*) | .pdf | .vbs | .ps1 | Encrypted Archives (.zip/.7z)</span>
             </div>
           </div>
 
@@ -102,7 +113,9 @@
       </div>
     </section>
 
-    <!-- 3. IOC ENRICHER -->
+    <!-- ==========================================
+         3. IOC ENRICHER (BVC ENGINE)
+         ========================================== -->
     <section class="content-panel panel-bvc">
       <div class="glitch-card">
         <div class="card-header">
@@ -117,7 +130,6 @@
             <label for="bvc-api-key" class="form-label">VT_API_KEY</label>
           </div>
 
-          <!-- Dropzone added directly above multiline input -->
           <div class="cyber-dropzone mb-4" id="zone-bvc" style="padding: 1.25rem;">
             <input type="file" id="input-bvc" class="hidden-input" accept=".csv,.txt">
             <div class="dropzone-label">
@@ -139,36 +151,10 @@
         </div>
       </div>
     </section>
-    
-    <!-- 3. BULK VIRUSTOTAL CHECKER (IOC ENRICHER) -->
-    <section class="content-panel panel-bvc">
-      <div class="glitch-card">
-        <div class="card-header">
-          <div class="card-title"><span>[TOOL] IOC_ENRICHER</span></div>
-          <div class="card-dots"><span></span><span></span><span></span></div>
-        </div>
-        <div class="card-body">
-          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Automated bulk query engine for enriching IOCs (IPs, Hashes, and Domains) against the VirusTotal API.</p>
-          
-          <div class="form-group" style="max-width: 100%;">
-            <input type="password" id="bvc-api-key" required placeholder=" " />
-            <label for="bvc-api-key" class="form-label">VT_API_KEY</label>
-          </div>
 
-          <div class="form-group" style="max-width: 100%;">
-            <textarea id="bvc-input" class="custom-textarea" rows="6" required placeholder=" "></textarea>
-            <label for="bvc-input" class="form-label">IOC_LIST (ONE PER LINE)</label>
-          </div>
-
-          <button type="button" class="antigravity-btn">
-            <span></span><span></span><span></span><span></span>
-            <span class="btn-text">INITIATE_SCAN</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. PASSWORD GENERATOR -->
+    <!-- ==========================================
+         4. PASSWORD GENERATOR
+         ========================================== -->
     <section class="content-panel panel-pass">
       <div class="glitch-card">
         <div class="card-header">
@@ -181,10 +167,9 @@
           <div class="pass-config-grid">
             <div class="form-group">
               <input type="number" id="pass-words" min="1" max="10" value="3" required placeholder=" " />
-              <label for="pass-words" class="form-label">WORD_COUNT</label>
+              <label for="pass-words" class="form-label">MIN_WORD_COUNT</label>
             </div>
             
-            <!-- REPLACED: Numeric floating input matching WORD_COUNT style -->
             <div class="form-group">
               <input type="number" id="pass-min-length" min="8" max="64" value="16" required placeholder=" " />
               <label for="pass-min-length" class="form-label">MIN_LENGTH</label>
@@ -247,7 +232,9 @@
       </div>
     </section>
 
-    <!-- 5. WHEEL OF SPIN -->
+    <!-- ==========================================
+         5. WHEEL OF SPIN (SHIFT SELECTOR)
+         ========================================== -->
     <section class="content-panel panel-wheel">
       <div class="glitch-card" id="capture-area">
         <div class="card-header">
@@ -256,12 +243,10 @@
         </div>
         <div class="card-body">
           
-          <!-- REPLACED: Full width description sitting cleanly at the very top of the card -->
           <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Gamified probability engine for randomizing targets, tasks, or shift assignments.</p>
 
           <div class="wheel-grid">
             
-            <!-- Column 1: Wheel -->
             <div class="wheel-col text-center">
               <div id="wheel-container">
                 <div class="pointer"></div>
@@ -275,7 +260,6 @@
               </div>
             </div>
 
-            <!-- Column 2: Configuration -->
             <div class="config-col">
               <div class="config-header">
                 <span class="card-title text-secondary">⚙️ CONFIGURATION</span>
@@ -301,7 +285,6 @@
               </div>
             </div>
 
-            <!-- Column 3: History -->
             <div class="history-col">
                <div class="config-header mb-4">
                 <span class="card-title text-secondary">📜 SPIN_HISTORY</span>
@@ -329,6 +312,7 @@
 
   </main>
 
+  <!-- Telemetry & Status Footer -->
   <footer class="spa-footer">
     <div class="footer-section">
       <span style="color: var(--primary-color);">SYS_TIME: </span>
