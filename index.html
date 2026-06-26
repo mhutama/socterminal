@@ -18,9 +18,9 @@
 <div class="spa-wrapper">
   <input type="radio" name="terminal-tabs" id="tab-email" checked>
   <input type="radio" name="terminal-tabs" id="tab-doc">
+  <input type="radio" name="terminal-tabs" id="tab-bvc">
   <input type="radio" name="terminal-tabs" id="tab-pass">
   <input type="radio" name="terminal-tabs" id="tab-wheel">
-  <input type="radio" name="terminal-tabs" id="tab-bvc">
 
   <header class="spa-header">
     <div class="spa-logo">
@@ -34,12 +34,12 @@
       <span>SOC ></span><span class="blinking-cursor">_</span>
     </div>
 
-	<nav class="spa-nav">
+    <nav class="spa-nav">
       <label for="tab-email" class="nav-btn btn-email" data-text="MAIL_ANALYZER">MAIL_ANALYZER</label>
       <label for="tab-doc" class="nav-btn btn-doc" data-text="FILE_INSPECTOR">FILE_INSPECTOR</label>
       <label for="tab-bvc" class="nav-btn btn-bvc" data-text="IOC_ENRICHER">IOC_ENRICHER</label>
       <label for="tab-pass" class="nav-btn btn-pass" data-text="PASS_GENERATOR">PASS_GENERATOR</label>
-      <label for="tab-wheel" class="nav-btn btn-wheel" data-text="SHIFT_SELECTOR">SHIFT_SELECTOR</label>
+      <label for="tab-wheel" class="nav-btn btn-wheel" data-text="WHEEL_OF_SPIN">WHEEL_OF_SPIN</label>
     </nav>
   </header>
 
@@ -48,10 +48,11 @@
     <section class="content-panel panel-email">
       <div class="glitch-card">
         <div class="card-header">
-          <div class="card-title"><span>[LOG] EMAIL_VIEWER_MODULE</span></div>
+          <div class="card-title"><span>[LOG] MAIL_ANALYZER</span></div>
           <div class="card-dots"><span></span><span></span><span></span></div>
         </div>
         <div class="card-body">
+          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Static analysis engine for inspecting email headers, SPF/DKIM records, body content, and extracting embedded indicators.</p>
           <p class="panel-placeholder">> Menunggu parsing data email... Silakan unggah berkas log atau indeks surel yang akan dianalisa ke dalam sistem.</p>
         </div>
       </div>
@@ -60,11 +61,39 @@
     <section class="content-panel panel-doc">
       <div class="glitch-card">
         <div class="card-header">
-          <div class="card-title"><span>[LOG] DOCUMENT_VIEWER_MODULE</span></div>
+          <div class="card-title"><span>[LOG] FILE_INSPECTOR</span></div>
           <div class="card-dots"><span></span><span></span><span></span></div>
         </div>
         <div class="card-body">
-          <p class="panel-placeholder">> Modul inspeksi dokumen aktif. Menunggu muatan file (PDF/Office) untuk ekstraksi teks statis.</p>
+          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Forensic inspection tool for extracting metadata, static text, and analyzing suspicious macros in office/PDF documents.</p>
+          <p class="panel-placeholder">> Modul inspeksi dokumen aktif. Menunggu muatan file untuk ekstraksi teks statis.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-panel panel-bvc">
+      <div class="glitch-card">
+        <div class="card-header">
+          <div class="card-title"><span>[TOOL] IOC_ENRICHER</span></div>
+          <div class="card-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="card-body">
+          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Automated bulk query engine for enriching IOCs (IPs, Hashes, and Domains) against the VirusTotal API.</p>
+          
+          <div class="form-group" style="max-width: 100%;">
+            <input type="password" id="bvc-api-key" required placeholder=" " />
+            <label for="bvc-api-key" class="form-label">VT_API_KEY</label>
+          </div>
+
+          <div class="form-group" style="max-width: 100%;">
+            <textarea id="bvc-input" class="custom-textarea" rows="6" required placeholder=" "></textarea>
+            <label for="bvc-input" class="form-label">IOC_LIST (ONE PER LINE)</label>
+          </div>
+
+          <button type="button" class="antigravity-btn">
+            <span></span><span></span><span></span><span></span>
+            <span class="btn-text">INITIATE_SCAN</span>
+          </button>
         </div>
       </div>
     </section>
@@ -72,10 +101,11 @@
     <section class="content-panel panel-pass">
       <div class="glitch-card">
         <div class="card-header">
-          <div class="card-title"><span>[TOOL] PASSWORD_GENERATOR</span></div>
+          <div class="card-title"><span>[TOOL] PASS_GENERATOR</span></div>
           <div class="card-dots"><span></span><span></span><span></span></div>
         </div>
         <div class="card-body">
+          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Cryptographically secure passphrase generator featuring customizable length, entropy injections, and leetspeak substitution rules.</p>
           
           <div class="pass-config-grid">
             <div class="form-group">
@@ -169,6 +199,8 @@
           </div>
 
           <div class="config-col">
+            <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8; font-size: 0.75rem;">> MODULE_DESC: Gamified probability engine for randomizing targets, tasks, or shift assignments.</p>
+
             <div class="config-header">
               <span class="card-title text-secondary">⚙️ CONFIGURATION</span>
               <span id="activeCount" class="badge">0 ACTIVE</span>
@@ -216,49 +248,22 @@
       </div>
     </section>
 
-    <section class="content-panel panel-bvc">
-      <div class="glitch-card">
-        <div class="card-header">
-          <div class="card-title"><span>[TOOL] BULK_VIRUSTOTAL_CHECKER</span></div>
-          <div class="card-dots"><span></span><span></span><span></span></div>
-        </div>
-        <div class="card-body">
-          <p class="panel-placeholder mb-4">> Awaiting IOCs (Indicators of Compromise). Enter hashes, IPs, or domains below.</p>
-          
-          <div class="form-group" style="max-width: 100%;">
-            <input type="password" id="bvc-api-key" required placeholder=" " />
-            <label for="bvc-api-key" class="form-label">VT_API_KEY</label>
-          </div>
-
-          <div class="form-group" style="max-width: 100%;">
-            <textarea id="bvc-input" class="custom-textarea" rows="6" required placeholder=" "></textarea>
-            <label for="bvc-input" class="form-label">IOC_LIST (ONE PER LINE)</label>
-          </div>
-
-          <button type="button" class="antigravity-btn">
-            <span></span><span></span><span></span><span></span>
-            <span class="btn-text">INITIATE_SCAN</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
   </main>
 
-	<footer class="spa-footer">
-		<div class="footer-section">
-		  <span style="color: var(--primary-color);">SYS_TIME: </span>
-		  <span id="clock-utc" style="color: var(--text-main);"></span> <span style="opacity: 0.3; margin: 0 8px;">|</span>
-		  <span id="clock-utc3" style="color: var(--text-main);"></span> <span style="opacity: 0.3; margin: 0 8px;">|</span>
-		  <span id="clock-utc7" style="color: var(--secondary-color); font-weight: bold;"></span>
-		</div>
-		
-		<div class="footer-section">
-		  <span style="color: var(--primary-color);">SYSTEM_UPTIME: </span>
-		  <span id="uptime-days" style="color: var(--secondary-color); font-weight: bold;">0</span>
-		  <span style="color: var(--primary-color);"> DAYS</span>
-		</div>
-	</footer>
+  <footer class="spa-footer">
+    <div class="footer-section">
+      <span style="color: var(--primary-color);">SYS_TIME: </span>
+      <span id="clock-utc" style="color: var(--text-main);"></span> <span style="opacity: 0.3; margin: 0 8px;">|</span>
+      <span id="clock-utc3" style="color: var(--text-main);"></span> <span style="opacity: 0.3; margin: 0 8px;">|</span>
+      <span id="clock-utc7" style="color: var(--secondary-color); font-weight: bold;"></span>
+    </div>
+    
+    <div class="footer-section">
+      <span style="color: var(--primary-color);">SYSTEM_UPTIME: </span>
+      <span id="uptime-days" style="color: var(--secondary-color); font-weight: bold;">0</span>
+      <span style="color: var(--primary-color);"> DAYS</span>
+    </div>
+  </footer>
 </div>
 
 </body>
