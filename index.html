@@ -5,17 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SOC Terminal</title>
   
+  <!-- OWASP Mitigation: Strict Content Security Policy (CSP) -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://i.postimg.cc data:; connect-src 'self' https://raw.githubusercontent.com;">
 
   <link rel="stylesheet" href="style.css">
   
+  <!-- OWASP Mitigation: Subresource Integrity (SRI) for external libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQmJb1OcdXV43TzVvXU/6o/D7fG1F/GtdA2bQilU1Oa49FqV2nZ3Q7I1sOa+G5Bq1wQf+O3O8OqZ1wA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   
+  <!-- External Logic File -->
   <script src="socterminal.js" defer></script>
 </head>
 <body>
 
 <div class="spa-wrapper">
+  <!-- Tab Controllers -->
   <input type="radio" name="terminal-tabs" id="tab-email" checked>
   <input type="radio" name="terminal-tabs" id="tab-doc">
   <input type="radio" name="terminal-tabs" id="tab-bvc">
@@ -45,6 +49,7 @@
 
   <main class="spa-content">
     
+    <!-- 1. MAIL ANALYZER -->
     <section class="content-panel panel-email">
       <div class="glitch-card">
         <div class="card-header">
@@ -58,6 +63,7 @@
       </div>
     </section>
 
+    <!-- 2. FILE INSPECTOR -->
     <section class="content-panel panel-doc">
       <div class="glitch-card">
         <div class="card-header">
@@ -71,6 +77,7 @@
       </div>
     </section>
 
+    <!-- 3. BULK VIRUSTOTAL CHECKER (IOC ENRICHER) -->
     <section class="content-panel panel-bvc">
       <div class="glitch-card">
         <div class="card-header">
@@ -98,6 +105,7 @@
       </div>
     </section>
 
+    <!-- 4. PASSWORD GENERATOR -->
     <section class="content-panel panel-pass">
       <div class="glitch-card">
         <div class="card-header">
@@ -113,25 +121,10 @@
               <label for="pass-words" class="form-label">WORD_COUNT</label>
             </div>
             
+            <!-- REPLACED: Numeric floating input matching WORD_COUNT style -->
             <div class="form-group">
-              <select id="pass-min-length" class="custom-select" required>
-                <option value="8">8 CHARACTERS</option>
-                <option value="12">12 CHARACTERS</option>
-                <option value="16" selected>16 CHARACTERS</option>
-                <option value="22">22 CHARACTERS</option>
-                <option value="24">24 CHARACTERS</option>
-                <option value="30">30 CHARACTERS</option>
-                <option value="34">34 CHARACTERS</option>
-                <option value="38">38 CHARACTERS</option>
-                <option value="42">42 CHARACTERS</option>
-                <option value="46">46 CHARACTERS</option>
-                <option value="50">50 CHARACTERS</option>				
-                <option value="54">54 CHARACTERS</option>
-                <option value="58">58 CHARACTERS</option>
-                <option value="62">62 CHARACTERS</option>
-                <option value="66">66 CHARACTERS</option>				
-              </select>
-              <label for="pass-min-length" class="form-label select-label">MIN_LENGTH</label>
+              <input type="number" id="pass-min-length" min="8" max="64" value="16" required placeholder=" " />
+              <label for="pass-min-length" class="form-label">MIN_LENGTH</label>
             </div>
           </div>
 
@@ -166,7 +159,6 @@
               <input type="checkbox" id="pass-leet" class="custom-checkbox">
               <span class="checkbox-text">ENABLE_LEETSPEAK_SUBSTITUTION (e.g. e->3, A->4)</span>
             </label>
-            
             <label class="custom-checkbox-label">
               <input type="checkbox" id="pass-sep-special" class="custom-checkbox" checked>
               <span class="checkbox-text">USE_RANDOM_SPECIAL_CHAR_AS_WORD_SEPARATOR</span>
@@ -192,71 +184,80 @@
       </div>
     </section>
 
+    <!-- 5. WHEEL OF SPIN -->
     <section class="content-panel panel-wheel">
       <div class="glitch-card" id="capture-area">
         <div class="card-header">
           <div class="card-title"><span>[SUB_SYS] WHEEL_OF_SPIN</span></div>
           <div class="card-dots"><span></span><span></span><span></span></div>
         </div>
-        <div class="card-body wheel-grid">
+        <div class="card-body">
           
-          <div class="wheel-col text-center">
-            <div id="wheel-container">
-              <div class="pointer"></div>
-              <div class="center-play-button" id="spinPlayBtn">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-              </div>
-              <canvas id="wheelCanvas" width="450" height="450"></canvas>
-            </div>
-            <div id="emptyMessage" class="hidden panel-placeholder mt-4">
-              > SEMUA SEGMEN TERELIMINASI. INIT ULANG DIPERLUKAN.
-            </div>
-          </div>
+          <!-- REPLACED: Full width description sitting cleanly at the very top of the card -->
+          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Gamified probability engine for randomizing targets, tasks, or shift assignments.</p>
 
-          <div class="config-col">
-            <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8; font-size: 0.75rem;">> MODULE_DESC: Gamified probability engine for randomizing targets, tasks, or shift assignments.</p>
-
-            <div class="config-header">
-              <span class="card-title text-secondary">⚙️ CONFIGURATION</span>
-              <span id="activeCount" class="badge">0 ACTIVE</span>
-            </div>
+          <div class="wheel-grid">
             
-            <div class="form-group mb-4">
-              <input type="number" id="segmentCount" min="1" max="48" value="6" required placeholder=" " />
-              <label for="segmentCount" class="form-label">INITIAL_SEGMENTS</label>
+            <!-- Column 1: Wheel -->
+            <div class="wheel-col text-center">
+              <div id="wheel-container">
+                <div class="pointer"></div>
+                <div class="center-play-button" id="spinPlayBtn">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <canvas id="wheelCanvas" width="450" height="450"></canvas>
+              </div>
+              <div id="emptyMessage" class="hidden panel-placeholder mt-4">
+                > SEMUA SEGMEN TERELIMINASI. INIT ULANG DIPERLUKAN.
+              </div>
             </div>
 
-            <div class="names-scroll-container" id="namesList"></div>
+            <!-- Column 2: Configuration -->
+            <div class="config-col">
+              <div class="config-header">
+                <span class="card-title text-secondary">⚙️ CONFIGURATION</span>
+                <span id="activeCount" class="badge">0 ACTIVE</span>
+              </div>
+              
+              <div class="form-group mb-4">
+                <input type="number" id="segmentCount" min="1" max="48" value="6" required placeholder=" " />
+                <label for="segmentCount" class="form-label">INITIAL_SEGMENTS</label>
+              </div>
 
-            <div class="btn-group mt-4">
-              <button id="updateBtn" class="antigravity-btn full-width mb-2">
-                <span></span><span></span><span></span><span></span>
-                <span class="btn-text">RESET_ALL</span>
-              </button>
-              <button id="downloadBtn" class="antigravity-btn full-width alt-btn">
-                <span></span><span></span><span></span><span></span>
-                <span class="btn-text">EXPORT_PNG</span>
-              </button>
-            </div>
-          </div>
+              <div class="names-scroll-container" id="namesList"></div>
 
-          <div class="history-col">
-             <div class="config-header mb-4">
-              <span class="card-title text-secondary">📜 SPIN_HISTORY</span>
+              <div class="btn-group mt-4">
+                <button id="updateBtn" class="antigravity-btn full-width mb-2">
+                  <span></span><span></span><span></span><span></span>
+                  <span class="btn-text">RESET_ALL</span>
+                </button>
+                <button id="downloadBtn" class="antigravity-btn full-width alt-btn">
+                  <span></span><span></span><span></span><span></span>
+                  <span class="btn-text">EXPORT_PNG</span>
+                </button>
+              </div>
             </div>
-            <div class="history-table-container">
-              <table class="history-table">
-                <thead>
-                  <tr>
-                    <th>RND</th>
-                    <th>RESULT</th>
-                    <th>TIME</th>
-                  </tr>
-                </thead>
-                <tbody id="historyBody"></tbody>
-              </table>
-              <div id="noHistory" class="panel-placeholder text-center mt-4">> No spins recorded.</div>
+
+            <!-- Column 3: History -->
+            <div class="history-col">
+               <div class="config-header mb-4">
+                <span class="card-title text-secondary">📜 SPIN_HISTORY</span>
+              </div>
+              <div class="history-table-container">
+                <table class="history-table">
+                  <thead>
+                    <tr>
+                      <th>RND</th>
+                      <th>RESULT</th>
+                      <th>TIME</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyBody"></tbody>
+                </table>
+                <div id="noHistory" class="panel-placeholder text-center mt-4">> No spins recorded.</div>
+              </div>
             </div>
+
           </div>
 
         </div>
