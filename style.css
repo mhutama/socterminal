@@ -138,8 +138,26 @@ input[type="radio"][name="terminal-tabs"] {
 /* =========================================
    FOOTER STYLES
    ========================================= */
-.spa-footer { border-top: 1px solid rgba(0, 242, 234, 0.15); background-color: var(--bg-header); padding: 0.75rem 1.5rem; display: flex; justify-content: flex-end; align-items: center; font-size: 0.75rem; letter-spacing: 0.1em; margin-top: auto; }
+.spa-footer { 
+  border-top: 1px solid rgba(0, 242, 234, 0.15); 
+  background-color: var(--bg-header); 
+  padding: 0.75rem 1.5rem; 
+  display: flex; 
+  justify-content: space-between; /* Pushes time to left, uptime to right */
+  align-items: center; 
+  font-size: 0.75rem; 
+  letter-spacing: 0.05em; 
+  margin-top: auto; 
+}
 
+@media (max-width: 768px) {
+  .spa-footer { 
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center; 
+    padding: 1rem; 
+  }
+}
 /* =========================================
    ADDITIONAL UI ENHANCEMENTS
    ========================================= */
