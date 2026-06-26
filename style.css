@@ -67,25 +67,25 @@ input[type="radio"][name="terminal-tabs"] {
 .form-group input:focus { border-color: var(--primary-color); }
 .form-label { position: absolute; top: 0.6em; left: 0; font-size: 1rem; color: var(--primary-color); opacity: 0.5; text-transform: uppercase; pointer-events: none; transition: all var(--anim-fast) ease; }
 .form-group input:focus + .form-label, .form-group input:not(:placeholder-shown) + .form-label, .form-group textarea:focus + .form-label, .form-group textarea:not(:placeholder-shown) + .form-label { top: -1.3em; font-size: 0.75rem; opacity: 1; }
-.antigravity-btn { position: relative; padding: 0.9em 2em; background-color: transparent; border: none; outline: 1px solid rgba(0, 242, 234, 0.2); color: var(--primary-color); font-family: inherit; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; overflow: hidden; transition: all var(--anim-fast) ease; }
-.antigravity-btn.full-width { width: 100%; }
-.antigravity-btn.alt-btn { outline: 1px solid rgba(250, 240, 0, 0.2); color: var(--secondary-color); }
-.antigravity-btn.alt-btn:hover { background-color: var(--secondary-color); color: var(--bg-card); box-shadow: 0 0 20px var(--secondary-color); }
-.antigravity-btn.alt-btn span:nth-child(1) { background: linear-gradient(90deg, transparent, var(--secondary-color)); }
-.antigravity-btn.alt-btn span:nth-child(2) { background: linear-gradient(180deg, transparent, var(--secondary-color)); }
-.antigravity-btn.alt-btn span:nth-child(3) { background: linear-gradient(270deg, transparent, var(--secondary-color)); }
-.antigravity-btn.alt-btn span:nth-child(4) { background: linear-gradient(360deg, transparent, var(--secondary-color)); }
-.antigravity-btn:hover, .antigravity-btn:focus { background-color: var(--primary-color); color: var(--bg-card); box-shadow: 0 0 20px var(--primary-color); outline: none; }
-.antigravity-btn span:not(.btn-text) { position: absolute; display: block; }
-.antigravity-btn span:nth-child(1) { top: 0; left: -100%; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary-color)); animation: chase-top 1.5s linear infinite; }
+.socterminal-btn { position: relative; padding: 0.9em 2em; background-color: transparent; border: none; outline: 1px solid rgba(0, 242, 234, 0.2); color: var(--primary-color); font-family: inherit; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; overflow: hidden; transition: all var(--anim-fast) ease; }
+.socterminal-btn.full-width { width: 100%; }
+.socterminal-btn.alt-btn { outline: 1px solid rgba(250, 240, 0, 0.2); color: var(--secondary-color); }
+.socterminal-btn.alt-btn:hover { background-color: var(--secondary-color); color: var(--bg-card); box-shadow: 0 0 20px var(--secondary-color); }
+.socterminal-btn.alt-btn span:nth-child(1) { background: linear-gradient(90deg, transparent, var(--secondary-color)); }
+.socterminal-btn.alt-btn span:nth-child(2) { background: linear-gradient(180deg, transparent, var(--secondary-color)); }
+.socterminal-btn.alt-btn span:nth-child(3) { background: linear-gradient(270deg, transparent, var(--secondary-color)); }
+.socterminal-btn.alt-btn span:nth-child(4) { background: linear-gradient(360deg, transparent, var(--secondary-color)); }
+.socterminal-btn:hover, .socterminal-btn:focus { background-color: var(--primary-color); color: var(--bg-card); box-shadow: 0 0 20px var(--primary-color); outline: none; }
+.socterminal-btn span:not(.btn-text) { position: absolute; display: block; }
+.socterminal-btn span:nth-child(1) { top: 0; left: -100%; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary-color)); animation: chase-top 1.5s linear infinite; }
 @keyframes chase-top { 0% { left: -100%; } 50%, 100% { left: 100%; } }
-.antigravity-btn span:nth-child(2) { top: -100%; right: 0; width: 2px; height: 100%; background: linear-gradient(180deg, transparent, var(--primary-color)); animation: chase-right 1.5s linear infinite; animation-delay: 0.375s; }
+.socterminal-btn span:nth-child(2) { top: -100%; right: 0; width: 2px; height: 100%; background: linear-gradient(180deg, transparent, var(--primary-color)); animation: chase-right 1.5s linear infinite; animation-delay: 0.375s; }
 @keyframes chase-right { 0% { top: -100%; } 50%, 100% { top: 100%; } }
-.antigravity-btn span:nth-child(3) { bottom: 0; right: -100%; width: 100%; height: 2px; background: linear-gradient(270deg, transparent, var(--primary-color)); animation: chase-bottom 1.5s linear infinite; animation-delay: 0.75s; }
+.socterminal-btn span:nth-child(3) { bottom: 0; right: -100%; width: 100%; height: 2px; background: linear-gradient(270deg, transparent, var(--primary-color)); animation: chase-bottom 1.5s linear infinite; animation-delay: 0.75s; }
 @keyframes chase-bottom { 0% { right: -100%; } 50%, 100% { right: 100%; } }
-.antigravity-btn span:nth-child(4) { bottom: -100%; left: 0; width: 2px; height: 100%; background: linear-gradient(360deg, transparent, var(--primary-color)); animation: chase-left 1.5s linear infinite; animation-delay: 1.125s; }
+.socterminal-btn span:nth-child(4) { bottom: -100%; left: 0; width: 2px; height: 100%; background: linear-gradient(360deg, transparent, var(--primary-color)); animation: chase-left 1.5s linear infinite; animation-delay: 1.125s; }
 @keyframes chase-left { 0% { bottom: -100%; } 50%, 100% { bottom: 100%; } }
-.antigravity-btn .btn-text { position: relative; z-index: 2; }
+.socterminal-btn .btn-text { position: relative; z-index: 2; }
 
 /* =========================================
    PASSWORD GENERATOR STYLES
@@ -188,8 +188,8 @@ input[type="radio"][name="terminal-tabs"] {
   .spa-footer { justify-content: center; padding: 1rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .antigravity-btn span:not(.btn-text) { animation: none !important; display: none; }
-  .antigravity-btn { border: 2px solid var(--primary-color); }
+  .socterminal-btn span:not(.btn-text) { animation: none !important; display: none; }
+  .socterminal-btn { border: 2px solid var(--primary-color); }
   .blinking-cursor { animation: none; }
 }
 
