@@ -49,7 +49,7 @@
 
   <main class="spa-content">
     
-    <!-- 1. MAIL ANALYZER -->
+<!-- 1. MAIL ANALYZER -->
     <section class="content-panel panel-email">
       <div class="glitch-card">
         <div class="card-header">
@@ -58,7 +58,20 @@
         </div>
         <div class="card-body">
           <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Static analysis engine for inspecting email headers, SPF/DKIM records, body content, and extracting embedded indicators.</p>
-          <p class="panel-placeholder">> Menunggu parsing data email... Silakan unggah berkas log atau indeks surel yang akan dianalisa ke dalam sistem.</p>
+          
+          <!-- Cyber Dropzone -->
+          <div class="cyber-dropzone" id="zone-mail">
+            <input type="file" id="input-mail" class="hidden-input" accept=".eml,.msg,.zip,.7z" multiple>
+            <div class="dropzone-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16.5V9m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/></svg>
+              <span class="main-prompt">[ INGEST_EVIDENTIAL_MAIL ]</span>
+              <span class="sub-prompt">DRAG & DROP OR <span class="highlight">CLICK TO BROWSE</span></span>
+              <span class="allowed-tag">ALLOWED: .eml | .msg | .zip (Encrypted) | .7z (Encrypted)</span>
+            </div>
+          </div>
+
+          <div id="warn-mail" class="sys-alert hidden"></div>
+          <div id="manifest-mail" class="file-manifest"></div>
         </div>
       </div>
     </section>
@@ -72,11 +85,61 @@
         </div>
         <div class="card-body">
           <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Forensic inspection tool for extracting metadata, static text, and analyzing suspicious macros in office/PDF documents.</p>
-          <p class="panel-placeholder">> Modul inspeksi dokumen aktif. Menunggu muatan file untuk ekstraksi teks statis.</p>
+          
+          <div class="cyber-dropzone" id="zone-doc">
+            <input type="file" id="input-doc" class="hidden-input" accept=".doc,.docx,.docm,.xls,.xlsx,.xlsm,.pdf,.vbs,.ps1,.zip,.7z" multiple>
+            <div class="dropzone-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+              <span class="main-prompt">[ MOUNT_SUSPICIOUS_ARTIFACT ]</span>
+              <span class="sub-prompt">DRAG & DROP OR <span class="highlight">CLICK TO BROWSE</span></span>
+              <span class="allowed-tag">ALLOWED: Office (.doc* / .xls*) | .pdf | .vbs | .ps1 | Archives (.zip/.7z)</span>
+            </div>
+          </div>
+
+          <div id="warn-doc" class="sys-alert hidden"></div>
+          <div id="manifest-doc" class="file-manifest"></div>
         </div>
       </div>
     </section>
 
+    <!-- 3. IOC ENRICHER -->
+    <section class="content-panel panel-bvc">
+      <div class="glitch-card">
+        <div class="card-header">
+          <div class="card-title"><span>[TOOL] IOC_ENRICHER</span></div>
+          <div class="card-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="card-body">
+          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Automated bulk query engine for enriching IOCs (IPs, Hashes, and Domains) against the VirusTotal API.</p>
+          
+          <div class="form-group" style="max-width: 100%;">
+            <input type="password" id="bvc-api-key" required placeholder=" " />
+            <label for="bvc-api-key" class="form-label">VT_API_KEY</label>
+          </div>
+
+          <!-- Dropzone added directly above multiline input -->
+          <div class="cyber-dropzone mb-4" id="zone-bvc" style="padding: 1.25rem;">
+            <input type="file" id="input-bvc" class="hidden-input" accept=".csv,.txt">
+            <div class="dropzone-label">
+              <span class="main-prompt" style="font-size: 0.85rem;">[ OPTIONAL: DROP .CSV / .TXT TO AUTO-POPULATE LIST ]</span>
+              <span class="allowed-tag">FILE CONTENTS WILL BE PIPED DIRECTLY TO TEXTAREA BELOW</span>
+            </div>
+          </div>
+          <div id="warn-bvc" class="sys-alert hidden mb-4"></div>
+
+          <div class="form-group" style="max-width: 100%;">
+            <textarea id="bvc-input" class="custom-textarea" rows="6" required placeholder=" "></textarea>
+            <label for="bvc-input" class="form-label">IOC_LIST (ONE PER LINE)</label>
+          </div>
+
+          <button type="button" class="antigravity-btn">
+            <span></span><span></span><span></span><span></span>
+            <span class="btn-text">INITIATE_SCAN</span>
+          </button>
+        </div>
+      </div>
+    </section>
+    
     <!-- 3. BULK VIRUSTOTAL CHECKER (IOC ENRICHER) -->
     <section class="content-panel panel-bvc">
       <div class="glitch-card">
@@ -177,7 +240,7 @@
 
           <button type="button" class="antigravity-btn full-width" id="generate-pass-btn">
             <span></span><span></span><span></span><span></span>
-            <span class="btn-text">GENERATE_ENTROPY</span>
+            <span class="btn-text">GENERATE</span>
           </button>
 
         </div>
