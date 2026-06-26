@@ -18,7 +18,7 @@ function updateClocks() {
 
     document.getElementById('clock-utc').textContent = `UTC [ ${formatTime(0)} ]`;
     document.getElementById('clock-utc3').textContent = `UTC+3 [ ${formatTime(3)} ]`;
-    document.getElementById('clock-utc7').textContent = `LOCAL (WIB) [ ${formatTime(7)} ]`;
+    document.getElementById('clock-utc7').textContent = `UTC+7 [ ${formatTime(7)} ]`;
 }
 
 function calculateUptime() {
@@ -79,13 +79,19 @@ document.getElementById('generate-pass-btn').addEventListener('click', () => {
     const capStart = document.getElementById('pass-cap-start').checked;
     const capEnd = document.getElementById('pass-cap-end').checked;
     const useLeet = document.getElementById('pass-leet').checked;
+    const useSeparator = document.getElementById('pass-sep-special').checked; // Grabbed UI state
+
+    const getRandomSpecial = () => specialChars[Math.floor(Math.random() * specialChars.length)];
 
     let selectedWords = [];
     let totalLength = 0;
 
+    // 1. Pick words & calculate real-time length (including projected separators)
     while (selectedWords.length < wordCount || totalLength < minLength) {
         const randomIdx = Math.floor(Math.random() * wordsArray.length);
-        let w = wordsArray[randomIdx].toLowerCase();
+        
+        // Layer 1 Defense: .trim() destroys outer spaces immediately
+        let w = wordsArray[randomIdx].trim().toLowerCase(); 
         
         if (capStart && w.length > 0) {
             w = w.charAt(0).toUpperCase() + w.slice(1);
@@ -97,24 +103,37 @@ document.getElementById('generate-pass-btn').addEventListener('click', () => {
         }
 
         selectedWords.push(w);
-        totalLength = selectedWords.join('').length;
+        
+        // Math check: N words require (N - 1) separators
+        const projectedSepChars = useSeparator ? Math.max(0, selectedWords.length - 1) : 0;
+        totalLength = selectedWords.join('').length + projectedSepChars;
     }
 
-    let phrase = selectedWords.join('');
+    // 2. Layer 2 Defense: Assemble phrase
+    let phrase = '';
+    if (useSeparator) {
+        // Injects a brand new random char into every individual gap
+        phrase = selectedWords.reduce((acc, word, idx) => {
+            return idx === 0 ? word : acc + getRandomSpecial() + word;
+        }, '');
+    } else {
+        phrase = selectedWords.join('');
+    }
 
+    // 3. Apply Leetspeak
     if (useLeet) {
         phrase = phrase.split('').map(char => leetMap[char] || char).join('');
     }
 
-    const getRandomSpecial = () => specialChars[Math.floor(Math.random() * specialChars.length)];
+    // 4. Attach Start/End Specials
+    if (specStart) phrase = getRandomSpecial() + phrase;
+    if (specEnd) phrase = phrase + getRandomSpecial();
 
-    if (specStart) {
-        phrase = getRandomSpecial() + phrase;
-    }
-    if (specEnd) {
-        phrase = phrase + getRandomSpecial();
-    }
+    // 5. Layer 3 Defense: The RegEx Guillotine 
+    // Scans string; hunts down any inner space leaking from dictionary words and replaces it
+    phrase = phrase.replace(/\s/g, () => getRandomSpecial());
 
+    // Push to Terminal UI
     document.getElementById('pass-output').value = phrase;
     document.getElementById('pass-length-display').textContent = `[${phrase.length} CHARS]`;
 });
