@@ -16,9 +16,9 @@ function updateClocks() {
         return `${dd}-${mmm}-${yyyy} ${hh}:${min}:${ss}`;
     };
 
-    document.getElementById('clock-utc').textContent = `UTC: ${formatTime(0)}`;
-    document.getElementById('clock-utc3').textContent = `UTC+3: ${formatTime(3)}`;
-    document.getElementById('clock-utc7').textContent = `UTC+7: ${formatTime(7)}`;
+    document.getElementById('clock-utc').textContent = `UTC [ ${formatTime(0)} ]`;
+    document.getElementById('clock-utc3').textContent = `UTC+3 [ ${formatTime(3)} ]`;
+    document.getElementById('clock-utc7').textContent = `LOCAL (WIB) [ ${formatTime(7)} ]`;
 }
 
 function calculateUptime() {
@@ -126,7 +126,6 @@ document.getElementById('copy-pass-btn').addEventListener('click', () => {
     navigator.clipboard.writeText(output.value).then(() => {
         const btn = document.getElementById('copy-pass-btn');
         const originalHTML = btn.innerHTML;
-        // SVG injection is trusted here as it is statically defined by us, not user input
         btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
         setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
     });
@@ -180,11 +179,25 @@ function generateDefaultNames() {
     names = Array.from({length: count}, (_, i) => `TARGET_${i+1}`);
 }
 
+// FIX: Listen for changes to the segment count input to dynamically add/remove fields
+segmentInput.addEventListener('change', (e) => {
+    const newCount = Math.min(Math.max(parseInt(e.target.value) || 1, 1), 48);
+    
+    if (newCount > names.length) {
+        for(let i = names.length; i < newCount; i++) {
+            names.push(`TARGET_${i+1}`);
+        }
+    } else if (newCount < names.length) {
+        names = names.slice(0, newCount);
+    }
+    
+    updateInputs(true);
+});
+
 function updateInputs(fromInit = false) {
     const count = Math.min(Math.max(parseInt(segmentInput.value) || 1, 1), 48);
     if (!fromInit && count !== names.length) generateDefaultNames();
     
-    // OWASP Mitigation: Clear safely and use DOM methods to prevent DOM XSS
     namesContainer.textContent = ''; 
     
     names.forEach((name, i) => {
@@ -201,7 +214,7 @@ function updateInputs(fromInit = false) {
         input.dataset.idx = i;
         input.className = 'name-input';
         input.placeholder = 'Name...';
-        input.value = name; // Securely handles potentially malicious strings
+        input.value = name; 
         
         div.appendChild(span);
         div.appendChild(input);
@@ -257,7 +270,7 @@ function drawWheel() {
         
         ctx.fillStyle = '#050505';
         ctx.font = 'bold 13px ui-monospace, SFMono-Regular, monospace'; 
-        ctx.fillText(name.substring(0, 25), radius - 20, 4); // canvas fillText inherently mitigates XSS
+        ctx.fillText(name.substring(0, 25), radius - 20, 4); 
         ctx.restore();
     });
 }
@@ -305,12 +318,15 @@ function calculateWinner() {
       names.splice(winningSegmentIdx, 1); 
       winningSegmentIdx = -1; 
       showResultVisuals = false; 
+      
+      // Keep segment input aligned with remaining names array
+      segmentInput.value = names.length;
       updateInputs(true); 
     }, 2500);
 }
 
 function updateHistoryTable() {
-    historyBody.textContent = ''; // OWASP Mitigation
+    historyBody.textContent = ''; 
     if (historyLog.length > 0) {
       noHistoryMsg.style.display = 'none';
     }
@@ -323,7 +339,7 @@ function updateHistoryTable() {
         
         const tdName = document.createElement('td');
         tdName.style.color = 'var(--secondary-color)';
-        tdName.textContent = item.name; // Secure rendering
+        tdName.textContent = item.name; 
         
         const tdTime = document.createElement('td');
         tdTime.textContent = item.time;
@@ -339,16 +355,30 @@ updateBtn.addEventListener('click', () => {
   historyLog = []; 
   updateHistoryTable(); 
   noHistoryMsg.style.display = 'block';
+  
+  // Resets array back to the number specified in the input
   generateDefaultNames(); 
   updateInputs(); 
   rotation = 0; 
   spinPlayBtn.classList.remove('spinning-state');
 });
 
+// FIX: Date-formatted PNG Export
 downloadBtn.addEventListener('click', () => {
     html2canvas(document.getElementById('capture-area')).then(canvas => {
         const link = document.createElement('a'); 
-        link.download = 'SOC_WHEEL_EXPORT.png'; 
+        
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        const secs = String(now.getSeconds()).padStart(2, '0');
+        
+        const timestamp = `${year}${month}${day}-${hours}${mins}${secs}`;
+        
+        link.download = `socterminal-wheelspinresult-${timestamp}.png`; 
         link.href = canvas.toDataURL(); 
         link.click();
     });
