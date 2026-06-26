@@ -1,352 +1,543 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYAWITH</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
-        
-        :root {
-            --bg-main: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
-            --panel-bg: rgba(255, 255, 255, 0.05);
-            --text-main: #ffffff;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --ts-color: #ffffff;
-            --ts-glow: 0 0 10px rgba(255, 255, 255, 0.8);
-            --accent-glow: #a855f7;
-        }
-
-        .light-theme {
-            --bg-main: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%);
-            --panel-bg: rgba(255, 255, 255, 0.8);
-            --text-main: #1e293b;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --ts-color: #000000;
-            --ts-glow: 0 0 8px rgba(0, 0, 0, 0.3);
-            --accent-glow: #7e22ce;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-main);
-            color: var(--text-main);
-            overflow-x: hidden;
-            transition: background 0.5s ease;
-        }
-
-        .glass-panel {
-            background: var(--panel-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-        }
-
-        .header-title {
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            background: linear-gradient(to bottom, var(--text-main), var(--accent-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        #wheel-container {
-            position: relative;
-        }
-
-        .pointer {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 50px;
-            background: #ff4d4d;
-            clip-path: polygon(50% 100%, 0 0, 100% 0);
-            z-index: 50;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-        }
-
-        .center-image-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            overflow: hidden;
-            z-index: 45;
-            border: 4px solid var(--border-color);
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            background: #000;
-        }
-
-        .center-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        #centerTimestamp {
-            color: var(--ts-color);
-            text-shadow: var(--ts-glow);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(168, 85, 247, 0.4);
-            border-radius: 10px;
-        }
-
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOC Terminal</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-start p-4 pt-8 pb-12">
+<body>
 
-    <header class="text-center mb-8">
-        <h1 class="header-title text-4xl mb-1">NYAWITH</h1>
-        <p class="text-[10px] font-bold tracking-[0.4em] opacity-60 uppercase">NYari With InTeractive HTML</p>
-    </header>
+<div class="spa-wrapper">
+  <input type="radio" name="terminal-tabs" id="tab-email" checked>
+  <input type="radio" name="terminal-tabs" id="tab-doc">
+  <input type="radio" name="terminal-tabs" id="tab-pass">
+  <input type="radio" name="terminal-tabs" id="tab-wheel">
+  <input type="radio" name="terminal-tabs" id="tab-bvc">
 
-    <div class="fixed top-6 right-6 z-50">
-        <button id="themeToggle" class="glass-panel p-3 rounded-full hover:scale-110 transition-transform">
-            <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l.707.707M6.343 6.343l.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z" />
-            </svg>
-            <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-        </button>
+  <header class="spa-header">
+    <div class="spa-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9z"></path>
+        <path d="M12 12l8 -4.5"></path>
+        <path d="M12 12l0 9"></path>
+        <path d="M12 12l-8 -4.5"></path>
+      </svg>
+      <span>SOC ></span><span class="blinking-cursor">_</span>
     </div>
 
-    <div id="capture-area" class="max-w-[1600px] w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start p-4">
-        
-        <div id="resultDisplay" class="lg:col-span-6 flex flex-col items-center gap-4">
-            <div id="wheel-container" class="relative">
-                <div class="pointer"></div>
-                <div class="center-image-container">
-                    <img id="centerPatrick" src="https://i.postimg.cc/1RczJH08/patrick-waiting.gif" alt="Patrick Center">
-                </div>
-                <canvas id="wheelCanvas" width="600" height="600" class="max-w-full h-auto"></canvas>
-            </div>
+    <nav class="spa-nav">
+      <label for="tab-email" class="nav-btn btn-email" data-text="EMAIL_VIEWER">EMAIL_VIEWER</label>
+      <label for="tab-doc" class="nav-btn btn-doc" data-text="DOCUMENT_VIEWER">DOCUMENT_VIEWER</label>
+      <label for="tab-pass" class="nav-btn btn-pass" data-text="PASSWORD_GENERATOR">PASSWORD_GENERATOR</label>
+      <label for="tab-wheel" class="nav-btn btn-wheel" data-text="WHEEL_OF_SPIN">WHEEL_OF_SPIN</label>
+      <label for="tab-bvc" class="nav-btn btn-bvc" data-text="BVC_MODULE">BVC_MODULE</label>
+    </nav>
 
-            <div class="w-full max-w-[600px] text-center glass-panel py-3 px-6">
-                <div id="centerTimestamp" class="text-xs font-bold tracking-widest uppercase opacity-80"></div>
-            </div>
-
-            <div id="emptyMessage" class="hidden text-center opacity-40 italic text-sm py-8 px-4">
-                All segments have been eliminated. <br>Click 'Reset All' to start over.
-            </div>
-        </div>
-
-        <div class="lg:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-6 no-print">
-            <div class="glass-panel p-6 flex flex-col h-full overflow-hidden">
-                <div class="mb-6 flex items-center justify-between">
-                    <h2 class="text-lg font-bold flex items-center gap-2">
-                        <span class="p-2 bg-purple-500/20 rounded-lg text-purple-400">⚙️</span>
-                        Config
-                    </h2>
-                    <span id="activeCount" class="text-[10px] bg-purple-500 text-white px-2 py-0.5 rounded-full font-bold">0 Active</span>
-                </div>
-
-                <div class="space-y-4">
-                    <div>
-                        <label class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Initial Segments</label>
-                        <input type="number" id="segmentCount" min="1" max="48" value="6" 
-                               class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none transition-all">
-                    </div>
-
-                    <div class="custom-scroll max-h-[300px] overflow-y-auto space-y-2 pr-2" id="namesList"></div>
-
-                    <div class="flex flex-col gap-3 pt-2">
-                        <button id="updateBtn" class="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-xl text-xs font-bold transition-all shadow-lg shadow-purple-500/30">
-                            RESET ALL
-                        </button>
-                        <button id="downloadBtn" class="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all">
-                            EXPORT PNG
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-panel p-6 flex flex-col h-full overflow-hidden">
-                <h3 class="text-lg font-bold flex items-center gap-2 mb-6">
-                    <span class="p-2 bg-purple-500/20 rounded-lg text-purple-400">📜</span>
-                    History
-                </h3>
-                
-                <div class="overflow-hidden rounded-xl border border-white/5 bg-black/10 flex-grow">
-                    <div class="custom-scroll max-h-[500px] overflow-y-auto">
-                        <table class="w-full text-left text-[10px]">
-                            <thead class="sticky top-0 bg-[#1e1e30] z-10 text-gray-400 uppercase font-black border-b border-white/5">
-                                <tr>
-                                    <th class="px-3 py-3">Round</th>
-                                    <th class="px-3 py-3">Result</th>
-                                    <th class="px-3 py-3">Time</th>
-                                </tr>
-                            </thead>
-                            <tbody id="historyBody" class="divide-y divide-white/5"></tbody>
-                        </table>
-                        <div id="noHistory" class="p-8 text-center text-white-500 italic text-[10px]">No spins yet</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="spa-status">
+      <span id="clock-utc"></span> | 
+      <span id="clock-utc3"></span> | 
+      <span id="clock-utc7"></span>
     </div>
+  </header>
 
-    <script>
-        const canvas = document.getElementById('wheelCanvas');
-        const ctx = canvas.getContext('2d');
-        const segmentInput = document.getElementById('segmentCount');
-        const namesContainer = document.getElementById('namesList');
-        const updateBtn = document.getElementById('updateBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const themeToggle = document.getElementById('themeToggle');
-        const centerTS = document.getElementById('centerTimestamp');
-        const centerPatrick = document.getElementById('centerPatrick');
-        const historyBody = document.getElementById('historyBody');
-        const noHistoryMsg = document.getElementById('noHistory');
-        const activeCountLabel = document.getElementById('activeCount');
-        const emptyMessage = document.getElementById('emptyMessage');
+  <main class="spa-content">
+    
+    <section class="content-panel panel-email">
+      <div class="glitch-card">
+        <div class="card-header">
+          <div class="card-title"><span>[LOG] EMAIL_VIEWER_MODULE</span></div>
+          <div class="card-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="card-body">
+          <p class="panel-placeholder">> Menunggu parsing data email... Silakan unggah berkas log atau indeks surel yang akan dianalisa ke dalam sistem.</p>
+        </div>
+      </div>
+    </section>
 
-        const waitingGif = 'https://i.postimg.cc/1RczJH08/patrick-waiting.gif';
-        const plottingGif = 'https://i.postimg.cc/rFzV8JkK/patrick-plotting.gif';
+    <section class="content-panel panel-doc">
+      <div class="glitch-card">
+        <div class="card-header">
+          <div class="card-title"><span>[LOG] DOCUMENT_VIEWER_MODULE</span></div>
+          <div class="card-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="card-body">
+          <p class="panel-placeholder">> Modul inspeksi dokumen aktif. Menunggu muatan file (PDF/Office) untuk ekstraksi teks statis.</p>
+        </div>
+      </div>
+    </section>
 
-        let names = []; 
-        let rotation = 0;
-        let velocity = 0;
-        let friction = 0.988;
-        let isSpinning = false;
-        let winningSegmentIdx = -1;
-        let showResultVisuals = false; 
-        let history = [];
+    <section class="content-panel panel-pass">
+      <div class="glitch-card">
+        <div class="card-header">
+          <div class="card-title"><span>[TOOL] PASSWORD_GENERATOR</span></div>
+          <div class="card-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="card-body">
+          
+          <div class="pass-config-grid">
+            <div class="form-group">
+              <input type="number" id="pass-words" min="1" max="10" value="3" required placeholder=" " />
+              <label for="pass-words" class="form-label">WORD_COUNT</label>
+            </div>
+            <div class="form-group">
+              <select id="pass-special" class="custom-select" required>
+                <option value="none">NONE</option>
+                <option value="start">START (!phrase)</option>
+                <option value="end">END (phrase#)</option>
+                <option value="both">BOTH ($phrase@)</option>
+              </select>
+              <label for="pass-special" class="form-label select-label">SPECIAL_CHARS_POS</label>
+            </div>
+          </div>
 
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const radius = 280;
+          <div class="checkbox-wrapper mb-4">
+            <label class="custom-checkbox-label">
+              <input type="checkbox" id="pass-leet" class="custom-checkbox">
+              <span class="checkbox-text">ENABLE_LEETSPEAK_SUBSTITUTION (e.g. e->3, A->4)</span>
+            </label>
+          </div>
 
-        const colors = ['#FF3D68', '#3DFFC3', '#3D94FF', '#FFD33D', '#A855F7', '#FF8C3D', '#3DFF6E', '#FF3DC2', '#3DDBFF', '#E0FF3D', '#6366F1', '#F43F5E'];
+          <div class="form-group mb-4">
+            <input type="text" id="pass-output" readonly placeholder=" " style="color: var(--secondary-color); border-bottom-color: var(--secondary-color);" />
+            <label for="pass-output" class="form-label" style="color: var(--secondary-color);">GENERATED_PASSPHRASE</label>
+          </div>
 
-        function getUTCString(formatType = 'full') {
-            const now = new Date();
-            const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-            const dd = String(now.getUTCDate()).padStart(2, '0');
-            const mmm = months[now.getUTCMonth()];
-            const yyyy = now.getUTCFullYear();
-            const hh = String(now.getUTCHours()).padStart(2, '0');
-            const min = String(now.getUTCMinutes()).padStart(2, '0');
-            const ss = String(now.getUTCSeconds()).padStart(2, '0');
-            return formatType === 'history' ? `${dd}-${mmm}-${yyyy} ${hh}:${min}:${ss} UTC` : `${dd}-${mmm}-${yyyy} | ${hh}:${min}:${ss} UTC`;
-        }
+          <button type="button" class="antigravity-btn full-width" id="generate-pass-btn">
+            <span></span><span></span><span></span><span></span>
+            <span class="btn-text">GENERATE_ENTROPY</span>
+          </button>
 
-        function init() {
-            centerPatrick.src = waitingGif;
-            const savedNames = localStorage.getItem('wheelNames');
-            if (savedNames) { names = JSON.parse(savedNames); segmentInput.value = names.length; } 
-            else { generateDefaultNames(); }
-            updateInputs(true);
-            requestAnimationFrame(animate);
-            setInterval(() => { centerTS.innerText = getUTCString('full'); }, 1000);
-        }
+        </div>
+      </div>
+    </section>
 
-        function generateDefaultNames() {
-            const count = parseInt(segmentInput.value) || 6;
-            names = Array.from({length: count}, (_, i) => `Option ${i+1}`);
-        }
+    <section class="content-panel panel-wheel">
+      <div class="glitch-card" id="capture-area">
+        <div class="card-header">
+          <div class="card-title"><span>[SUB_SYS] WHEEL_OF_SPIN</span></div>
+          <div class="card-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="card-body wheel-grid">
+          
+          <div class="wheel-col text-center">
+            <div id="wheel-container">
+              <div class="pointer"></div>
+              <div class="center-image-container">
+                <img id="centerPatrick" src="https://i.postimg.cc/1RczJH08/patrick-waiting.gif" alt="Center Status">
+              </div>
+              <canvas id="wheelCanvas" width="450" height="450"></canvas>
+            </div>
+            <div id="emptyMessage" class="hidden panel-placeholder mt-4">
+              > SEMUA SEGMEN TERELIMINASI. INIT ULANG DIPERLUKAN.
+            </div>
+          </div>
 
-        function updateInputs(fromInit = false) {
-            const count = Math.min(Math.max(parseInt(segmentInput.value) || 1, 1), 48);
-            if (!fromInit && count !== names.length) generateDefaultNames();
-            namesContainer.innerHTML = '';
-            names.forEach((name, i) => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center gap-2 bg-black/10 p-2 rounded-lg border border-white/5 group';
-                div.innerHTML = `<span class="text-[10px] font-bold text-white-500 w-4">${i + 1}</span><input type="text" maxlength="25" data-idx="${i}" class="name-input bg-transparent border-none text-xs w-full outline-none focus:text-purple-400 transition-colors" placeholder="Name..." value="${name}">`;
-                namesContainer.appendChild(div);
-            });
-            document.querySelectorAll('.name-input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const idx = parseInt(e.target.dataset.idx);
-                    names[idx] = e.target.value || `Option ${idx + 1}`;
-                    saveToLocal(); drawWheel();
-                });
-            });
-            activeCountLabel.innerText = `${names.length} Active`;
-            emptyMessage.classList.toggle('hidden', names.length > 0);
-            saveToLocal(); drawWheel();
-        }
+          <div class="config-col">
+            <div class="config-header">
+              <span class="card-title text-secondary">⚙️ CONFIGURATION</span>
+              <span id="activeCount" class="badge">0 ACTIVE</span>
+            </div>
+            
+            <div class="form-group mb-4">
+              <input type="number" id="segmentCount" min="1" max="48" value="6" required placeholder=" " />
+              <label for="segmentCount" class="form-label">INITIAL_SEGMENTS</label>
+            </div>
 
-        function saveToLocal() { localStorage.setItem('wheelNames', JSON.stringify(names)); }
+            <div class="names-scroll-container" id="namesList"></div>
 
-        function drawWheel() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (names.length === 0) return;
-            const sliceAngle = (Math.PI * 2) / names.length;
-            names.forEach((name, i) => {
-                const startAngle = rotation + (i * sliceAngle);
-                ctx.save(); ctx.beginPath(); ctx.moveTo(centerX, centerY);
-                ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
-                ctx.fillStyle = colors[i % colors.length];
-                if (showResultVisuals && i === winningSegmentIdx) { ctx.shadowBlur = 30; ctx.shadowColor = '#fff'; }
-                ctx.fill(); ctx.stroke();
-                ctx.translate(centerX, centerY); ctx.rotate(startAngle + sliceAngle / 2);
-                ctx.textAlign = 'right'; ctx.fillStyle = (i === winningSegmentIdx && showResultVisuals) ? '#fff' : 'rgba(0,0,0,0.7)';
-                ctx.font = 'bold 12px Inter'; ctx.fillText(name.substring(0, 25), radius - 20, 5);
-                ctx.restore();
-            });
-        }
+            <div class="btn-group mt-4">
+              <button id="updateBtn" class="antigravity-btn full-width mb-2">
+                <span></span><span></span><span></span><span></span>
+                <span class="btn-text">RESET_ALL</span>
+              </button>
+              <button id="downloadBtn" class="antigravity-btn full-width alt-btn">
+                <span></span><span></span><span></span><span></span>
+                <span class="btn-text">EXPORT_PNG</span>
+              </button>
+            </div>
+          </div>
 
-        function animate() {
-            if (Math.abs(velocity) > 0.001) {
-                rotation += velocity; velocity *= friction;
-                if (!isSpinning) { isSpinning = true; showResultVisuals = false; centerPatrick.src = waitingGif; }
-            } else if (isSpinning) { velocity = 0; isSpinning = false; calculateWinner(); }
-            drawWheel(); requestAnimationFrame(animate);
-        }
+          <div class="history-col">
+             <div class="config-header mb-4">
+              <span class="card-title text-secondary">📜 SPIN_HISTORY</span>
+            </div>
+            <div class="history-table-container">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>RND</th>
+                    <th>RESULT</th>
+                    <th>TIME</th>
+                  </tr>
+                </thead>
+                <tbody id="historyBody"></tbody>
+              </table>
+              <div id="noHistory" class="panel-placeholder text-center mt-4">> No spins recorded.</div>
+            </div>
+          </div>
 
-        canvas.addEventListener('mousedown', (e) => {
-            if (names.length === 0) return;
-            const rect = canvas.getBoundingClientRect();
-            velocity += (e.clientX - rect.left < rect.width / 2 ? -1 : 1) * (0.15 + Math.random() * 0.12);
-        });
+        </div>
+      </div>
+    </section>
 
-        function calculateWinner() {
-            if (names.length === 0) return;
-            const sliceSize = (Math.PI * 2) / names.length;
-            winningSegmentIdx = Math.floor(((Math.PI * 1.5) - (((rotation % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2))) / sliceSize);
-            winningSegmentIdx = (winningSegmentIdx % names.length + names.length) % names.length;
-            const winner = names[winningSegmentIdx];
-            showResultVisuals = true; centerPatrick.src = plottingGif;
-            history.unshift({ round: history.length + 1, name: winner, time: getUTCString('history') });
-            updateHistoryTable();
-            setTimeout(() => { names.splice(winningSegmentIdx, 1); winningSegmentIdx = -1; showResultVisuals = false; updateInputs(true); }, 2500);
-        }
+    <section class="content-panel panel-bvc">
+      <div class="glitch-card">
+        <div class="card-header">
+          <div class="card-title"><span>[TOOL] BULK_VIRUSTOTAL_CHECKER</span></div>
+          <div class="card-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="card-body">
+          <p class="panel-placeholder mb-4">> Awaiting IOCs (Indicators of Compromise). Enter hashes, IPs, or domains below.</p>
+          
+          <div class="form-group" style="max-width: 100%;">
+            <input type="password" id="bvc-api-key" required placeholder=" " />
+            <label for="bvc-api-key" class="form-label">VT_API_KEY</label>
+          </div>
 
-        function updateHistoryTable() {
-            historyBody.innerHTML = ''; noHistoryMsg.classList.toggle('hidden', history.length > 0);
-            history.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="px-3 py-3 font-mono text-white-500">#${item.round}</td><td class="px-3 py-3 font-bold text-purple-400 truncate max-w-[80px]">${item.name}</td><td class="px-3 py-3 text-white-500 font-mono text-[9px]">${item.time}</td>`;
-                historyBody.appendChild(tr);
-            });
-        }
+          <div class="form-group" style="max-width: 100%;">
+            <textarea id="bvc-input" class="custom-textarea" rows="6" required placeholder=" "></textarea>
+            <label for="bvc-input" class="form-label">IOC_LIST (ONE PER LINE)</label>
+          </div>
 
-        updateBtn.addEventListener('click', () => { history = []; updateHistoryTable(); generateDefaultNames(); updateInputs(); rotation = 0; centerPatrick.src = waitingGif; });
-        themeToggle.addEventListener('click', () => { document.body.classList.toggle('light-theme'); });
-        downloadBtn.addEventListener('click', () => {
-            html2canvas(document.body).then(canvas => {
-                const link = document.createElement('a'); link.download = 'NYAWIT-Result.png'; link.href = canvas.toDataURL(); link.click();
-            });
-        });
+          <button type="button" class="antigravity-btn">
+            <span></span><span></span><span></span><span></span>
+            <span class="btn-text">INITIATE_SCAN</span>
+          </button>
+        </div>
+      </div>
+    </section>
 
-        window.onload = init;
-    </script>
+  </main>
+
+  <footer class="spa-footer">
+    <div class="footer-content">
+      <span style="color: var(--primary-color);">SYSTEM_UPTIME: </span>
+      <span id="uptime-days" style="color: var(--secondary-color); font-weight: bold;">0</span>
+      <span style="color: var(--primary-color);"> DAYS</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ==========================================
+  // SYSTEM CLOCKS & UPTIME
+  // ==========================================
+  function updateClocks() {
+    const now = new Date();
+    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    
+    const formatTime = (offsetHours) => {
+      const targetTime = new Date(now.getTime() + (offsetHours * 3600 * 1000));
+      const dd = String(targetTime.getUTCDate()).padStart(2, '0');
+      const mmm = months[targetTime.getUTCMonth()];
+      const yyyy = targetTime.getUTCFullYear();
+      const hh = String(targetTime.getUTCHours()).padStart(2, '0');
+      const min = String(targetTime.getUTCMinutes()).padStart(2, '0');
+      const ss = String(targetTime.getUTCSeconds()).padStart(2, '0');
+      return `${dd}-${mmm}-${yyyy} ${hh}:${min}:${ss}`;
+    };
+
+    document.getElementById('clock-utc').textContent = `UTC: ${formatTime(0)}`;
+    document.getElementById('clock-utc3').textContent = `UTC+3: ${formatTime(3)}`;
+    document.getElementById('clock-utc7').textContent = `UTC+7: ${formatTime(7)}`;
+  }
+
+  function calculateUptime() {
+      // Setup initial deploy date here
+      const launchDate = new Date("2026-02-15T00:00:00Z"); 
+      const currentDate = new Date();
+      
+      const differenceInTime = currentDate.getTime() - launchDate.getTime();
+      const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+      
+      document.getElementById('uptime-days').textContent = differenceInDays >= 0 ? differenceInDays : 0;
+  }
+
+  setInterval(updateClocks, 1000);
+  updateClocks();
+  window.addEventListener('DOMContentLoaded', calculateUptime);
+
+
+  // ==========================================
+  // PASSWORD GENERATOR LOGIC
+  // ==========================================
+  const WORDS_JSON_URL = "./words.json"; 
+  let wordsArray = [];
+
+  const leetMap = {
+      'o': '0', 'O': '0', 'i': '1', 'I': '1', 'e': '3', 'E': '3',
+      'A': '4', 'a': '4', 'G': '6', 'g': '9', 'S': '5', 's': '5',
+      'T': '7', 't': '7', 'B': '8', 'b': '8'
+  };
+
+  const specialChars = "!@#$%^&*_-+=?";
+
+  async function fetchWords() {
+      try {
+          const response = await fetch(WORDS_JSON_URL);
+          if (!response.ok) throw new Error("Network response was not ok");
+          
+          const rawData = await response.json();
+          wordsArray = [];
+          for (const key in rawData) {
+              if (Array.isArray(rawData[key])) {
+                  wordsArray = wordsArray.concat(rawData[key]);
+              }
+          }
+          wordsArray = wordsArray.filter(word => word !== "...");
+      } catch (error) {
+          console.warn("[SYS_WARN] Failed to fetch words.json, using fallback dictionary.");
+          wordsArray = ["cyber", "terminal", "matrix", "network", "system", "hacker", "breach", "firewall"];
+      }
+  }
+
+  window.addEventListener('DOMContentLoaded', fetchWords);
+
+  document.getElementById('generate-pass-btn').addEventListener('click', () => {
+      if (wordsArray.length === 0) return;
+
+      const wordCount = parseInt(document.getElementById('pass-words').value) || 3;
+      const specialPos = document.getElementById('pass-special').value;
+      const useLeet = document.getElementById('pass-leet').checked;
+
+      let selectedWords = [];
+      for (let i = 0; i < wordCount; i++) {
+          const randomIdx = Math.floor(Math.random() * wordsArray.length);
+          selectedWords.push(wordsArray[randomIdx]);
+      }
+
+      let phrase = selectedWords.join('-');
+
+      if (useLeet) {
+          phrase = phrase.split('').map(char => leetMap[char] || char).join('');
+      }
+
+      const getRandomSpecial = () => specialChars[Math.floor(Math.random() * specialChars.length)];
+
+      if (specialPos === 'start' || specialPos === 'both') {
+          phrase = getRandomSpecial() + phrase;
+      }
+      if (specialPos === 'end' || specialPos === 'both') {
+          phrase = phrase + getRandomSpecial();
+      }
+
+      document.getElementById('pass-output').value = phrase;
+  });
+
+
+  // ==========================================
+  // WHEEL OF SPIN LOGIC
+  // ==========================================
+  const canvas = document.getElementById('wheelCanvas');
+  const ctx = canvas.getContext('2d');
+  const segmentInput = document.getElementById('segmentCount');
+  const namesContainer = document.getElementById('namesList');
+  const updateBtn = document.getElementById('updateBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const centerPatrick = document.getElementById('centerPatrick');
+  const historyBody = document.getElementById('historyBody');
+  const noHistoryMsg = document.getElementById('noHistory');
+  const activeCountLabel = document.getElementById('activeCount');
+  const emptyMessage = document.getElementById('emptyMessage');
+
+  const waitingGif = 'https://i.postimg.cc/1RczJH08/patrick-waiting.gif';
+  const plottingGif = 'https://i.postimg.cc/rFzV8JkK/patrick-plotting.gif';
+
+  let names = []; 
+  let rotation = 0;
+  let velocity = 0;
+  let friction = 0.988;
+  let isSpinning = false;
+  let winningSegmentIdx = -1;
+  let showResultVisuals = false; 
+  let historyLog = [];
+
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = 210;
+
+  const colors = ['#00F2EA', '#050505', '#FAF000', '#0a0a0a', '#009e99', '#151515', '#999400', '#004f4c'];
+
+  function initWheel() {
+      centerPatrick.src = waitingGif;
+      const savedNames = localStorage.getItem('wheelNames');
+      if (savedNames) { 
+        names = JSON.parse(savedNames); 
+        segmentInput.value = names.length; 
+      } else { 
+        generateDefaultNames(); 
+      }
+      updateInputs(true);
+      requestAnimationFrame(animate);
+  }
+
+  function generateDefaultNames() {
+      const count = parseInt(segmentInput.value) || 6;
+      names = Array.from({length: count}, (_, i) => `TARGET_${i+1}`);
+  }
+
+  function updateInputs(fromInit = false) {
+      const count = Math.min(Math.max(parseInt(segmentInput.value) || 1, 1), 48);
+      if (!fromInit && count !== names.length) generateDefaultNames();
+      
+      namesContainer.innerHTML = '';
+      names.forEach((name, i) => {
+          const div = document.createElement('div');
+          div.className = 'name-input-wrapper';
+          div.innerHTML = `
+            <span class="idx">${i + 1}</span>
+            <input type="text" maxlength="25" data-idx="${i}" class="name-input" placeholder="Name..." value="${name}">
+          `;
+          namesContainer.appendChild(div);
+      });
+
+      document.querySelectorAll('.name-input').forEach(input => {
+          input.addEventListener('change', (e) => {
+              const idx = parseInt(e.target.dataset.idx);
+              names[idx] = e.target.value || `TARGET_${idx + 1}`;
+              saveToLocal(); drawWheel();
+          });
+      });
+
+      activeCountLabel.innerText = `${names.length} ACTIVE`;
+      if (names.length > 0) {
+        emptyMessage.style.display = 'none';
+      } else {
+        emptyMessage.style.display = 'block';
+      }
+      
+      saveToLocal(); 
+      drawWheel();
+  }
+
+  function saveToLocal() { localStorage.setItem('wheelNames', JSON.stringify(names)); }
+
+  function drawWheel() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (names.length === 0) return;
+      
+      const sliceAngle = (Math.PI * 2) / names.length;
+      
+      names.forEach((name, i) => {
+          const startAngle = rotation + (i * sliceAngle);
+          ctx.save(); 
+          ctx.beginPath(); 
+          ctx.moveTo(centerX, centerY);
+          ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+          
+          ctx.fillStyle = colors[i % colors.length];
+          ctx.strokeStyle = '#00F2EA';
+          ctx.lineWidth = 1;
+          
+          if (showResultVisuals && i === winningSegmentIdx) { 
+            ctx.shadowBlur = 20; 
+            ctx.shadowColor = '#FAF000'; 
+            ctx.fillStyle = '#FAF000';
+          }
+          
+          ctx.fill(); 
+          ctx.stroke();
+          
+          ctx.translate(centerX, centerY); 
+          ctx.rotate(startAngle + sliceAngle / 2);
+          ctx.textAlign = 'right'; 
+          
+          const isDarkBg = (i % colors.length) === 1 || (i % colors.length) === 3 || (i % colors.length) === 5 || (i % colors.length) === 7;
+          ctx.fillStyle = showResultVisuals && i === winningSegmentIdx ? '#050505' : (isDarkBg ? '#00F2EA' : '#050505');
+          ctx.font = 'bold 12px ui-monospace, SFMono-Regular, monospace'; 
+          ctx.fillText(name.substring(0, 25), radius - 15, 4);
+          ctx.restore();
+      });
+  }
+
+  function animate() {
+      if (Math.abs(velocity) > 0.001) {
+          rotation += velocity; 
+          velocity *= friction;
+          if (!isSpinning) { 
+            isSpinning = true; 
+            showResultVisuals = false; 
+            centerPatrick.src = waitingGif; 
+          }
+      } else if (isSpinning) { 
+        velocity = 0; 
+        isSpinning = false; 
+        calculateWinner(); 
+      }
+      drawWheel(); 
+      requestAnimationFrame(animate);
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+      if (names.length === 0) return;
+      const rect = canvas.getBoundingClientRect();
+      velocity += (e.clientX - rect.left < rect.width / 2 ? -1 : 1) * (0.15 + Math.random() * 0.12);
+  });
+
+  function calculateWinner() {
+      if (names.length === 0) return;
+      const sliceSize = (Math.PI * 2) / names.length;
+      winningSegmentIdx = Math.floor(((Math.PI * 1.5) - (((rotation % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2))) / sliceSize);
+      winningSegmentIdx = (winningSegmentIdx % names.length + names.length) % names.length;
+      
+      const winner = names[winningSegmentIdx];
+      showResultVisuals = true; 
+      centerPatrick.src = plottingGif;
+      
+      const now = new Date();
+      const timeStr = `${String(now.getUTCHours()).padStart(2,'0')}:${String(now.getUTCMinutes()).padStart(2,'0')}:${String(now.getUTCSeconds()).padStart(2,'0')}`;
+      
+      historyLog.unshift({ round: historyLog.length + 1, name: winner, time: timeStr });
+      updateHistoryTable();
+      
+      setTimeout(() => { 
+        names.splice(winningSegmentIdx, 1); 
+        winningSegmentIdx = -1; 
+        showResultVisuals = false; 
+        updateInputs(true); 
+      }, 2500);
+  }
+
+  function updateHistoryTable() {
+      historyBody.innerHTML = ''; 
+      if (historyLog.length > 0) {
+        noHistoryMsg.style.display = 'none';
+      }
+      
+      historyLog.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>#${item.round}</td>
+            <td style="color: var(--secondary-color)">${item.name}</td>
+            <td>${item.time}</td>
+          `;
+          historyBody.appendChild(tr);
+      });
+  }
+
+  updateBtn.addEventListener('click', () => { 
+    historyLog = []; 
+    updateHistoryTable(); 
+    noHistoryMsg.style.display = 'block';
+    generateDefaultNames(); 
+    updateInputs(); 
+    rotation = 0; 
+    centerPatrick.src = waitingGif; 
+  });
+
+  downloadBtn.addEventListener('click', () => {
+      html2canvas(document.getElementById('capture-area')).then(canvas => {
+          const link = document.createElement('a'); 
+          link.download = 'SOC_WHEEL_EXPORT.png'; 
+          link.href = canvas.toDataURL(); 
+          link.click();
+      });
+  });
+
+  window.addEventListener('DOMContentLoaded', initWheel);
+</script>
 </body>
 </html>
