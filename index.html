@@ -5,29 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SOC Terminal</title>
   
-  <!-- OWASP Mitigation: Strict Content Security Policy (CSP) -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://i.postimg.cc data:; connect-src 'self' https://raw.githubusercontent.com;">
 
   <link rel="stylesheet" href="style.css">
   
-  <!-- Layout Override: Forces Widescreen Full-View on all panels -->
   <style>
-    .content-panel {
-      max-width: 96% !important;
-      width: 100%;
-    }
+    .content-panel { max-width: 96% !important; width: 100%; }
   </style>
 
-  <!-- OWASP Mitigation: Subresource Integrity (SRI) for external library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQmJb1OcdXV43TzVvXU/6o/D7fG1F/GtdA2bQilU1Oa49FqV2nZ3Q7I1sOa+G5Bq1wQf+O3O8OqZ1wA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  
-  <!-- External Logic File -->
   <script src="socterminal.js" defer></script>
 </head>
 <body>
 
 <div class="spa-wrapper">
-  <!-- Master Tab Controllers (Incident Response Triage Sequence) -->
   <input type="radio" name="terminal-tabs" id="tab-email" checked>
   <input type="radio" name="terminal-tabs" id="tab-doc">
   <input type="radio" name="terminal-tabs" id="tab-bvc">
@@ -51,15 +42,13 @@
       <label for="tab-doc" class="nav-btn btn-doc" data-text="FILE_INSPECTOR">FILE_INSPECTOR</label>
       <label for="tab-bvc" class="nav-btn btn-bvc" data-text="IOC_ENRICHER">IOC_ENRICHER</label>
       <label for="tab-pass" class="nav-btn btn-pass" data-text="PASS_GENERATOR">PASS_GENERATOR</label>
-      <label for="tab-wheel" class="nav-btn btn-wheel" data-text="SHIFT_SELECTOR">WHEEL_OF_SPIN</label>
+      <label for="tab-wheel" class="nav-btn btn-wheel" data-text="WHEEL_OF_SPIN">WHEEL_OF_SPIN</label>
     </nav>
   </header>
 
   <main class="spa-content">
     
-    <!-- ==========================================
-         1. MAIL ANALYZER
-         ========================================== -->
+    <!-- 1. MAIL ANALYZER -->
     <section class="content-panel panel-email">
       <div class="glitch-card">
         <div class="card-header">
@@ -75,7 +64,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16.5V9m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/></svg>
               <span class="main-prompt">[ INGEST_EVIDENTIAL_MAIL ]</span>
               <span class="sub-prompt">DRAG & DROP OR <span class="highlight">CLICK TO BROWSE</span></span>
-              <span class="allowed-tag">ALLOWED: .eml | .msg | Encrypted Archives (.zip/.7z)</span>
+              <span class="allowed-tag">ALLOWED: .eml | .msg | .zip (Encrypted) | .7z (Encrypted)</span>
             </div>
           </div>
 
@@ -85,9 +74,7 @@
       </div>
     </section>
 
-    <!-- ==========================================
-         2. FILE INSPECTOR
-         ========================================== -->
+    <!-- 2. FILE INSPECTOR -->
     <section class="content-panel panel-doc">
       <div class="glitch-card">
         <div class="card-header">
@@ -103,7 +90,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
               <span class="main-prompt">[ MOUNT_SUSPICIOUS_ARTIFACT ]</span>
               <span class="sub-prompt">DRAG & DROP OR <span class="highlight">CLICK TO BROWSE</span></span>
-              <span class="allowed-tag">ALLOWED: Office (.doc* / .xls*) | .pdf | .vbs | .ps1 | Encrypted Archives (.zip/.7z)</span>
+              <span class="allowed-tag">ALLOWED: Office (.doc* / .xls*) | .pdf | .vbs | .ps1 | Archives (.zip/.7z)</span>
             </div>
           </div>
 
@@ -113,9 +100,7 @@
       </div>
     </section>
 
-    <!-- ==========================================
-         3. IOC ENRICHER (BVC ENGINE)
-         ========================================== -->
+    <!-- 3. IOC ENRICHER -->
     <section class="content-panel panel-bvc">
       <div class="glitch-card">
         <div class="card-header">
@@ -152,9 +137,7 @@
       </div>
     </section>
 
-    <!-- ==========================================
-         4. PASSWORD GENERATOR
-         ========================================== -->
+    <!-- 4. PASSWORD GENERATOR -->
     <section class="content-panel panel-pass">
       <div class="glitch-card">
         <div class="card-header">
@@ -164,18 +147,19 @@
         <div class="card-body">
           <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Cryptographically secure passphrase generator featuring customizable length, entropy injections, and leetspeak substitution rules.</p>
           
+          <!-- Grid 1: Numeric Targets -->
           <div class="pass-config-grid">
             <div class="form-group">
               <input type="number" id="pass-words" min="1" max="10" value="3" required placeholder=" " />
-              <label for="pass-words" class="form-label">MIN_WORD_COUNT</label>
+              <label for="pass-words" class="form-label">WORD_COUNT</label>
             </div>
-            
             <div class="form-group">
               <input type="number" id="pass-min-length" min="8" max="64" value="16" required placeholder=" " />
               <label for="pass-min-length" class="form-label">MIN_LENGTH</label>
             </div>
           </div>
 
+          <!-- Grid 2: Structural Rules -->
           <div class="pass-config-grid mb-4">
             <div class="config-group-box">
               <span class="group-box-title">SPECIAL_CHARS_POS</span>
@@ -202,17 +186,34 @@
             </div>
           </div>
 
-          <div class="checkbox-wrapper mb-4" style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <label class="custom-checkbox-label">
-              <input type="checkbox" id="pass-leet" class="custom-checkbox">
-              <span class="checkbox-text">ENABLE_LEETSPEAK_SUBSTITUTION (e.g. e->3, A->4, B->8, 0->O, i->1)</span>
-            </label>
-            <label class="custom-checkbox-label">
-              <input type="checkbox" id="pass-sep-special" class="custom-checkbox" checked>
-              <span class="checkbox-text">USE_RANDOM_SPECIAL_CHAR_AS_WORD_SEPARATOR</span>
-            </label>
+          <!-- Grid 3: Advanced Entropy & Numeric Injection -->
+          <div class="pass-config-grid mb-4">
+            <div class="config-group-box">
+              <span class="group-box-title">NUMERIC_INJECTION</span>
+              <label class="custom-checkbox-label mb-2">
+                <input type="checkbox" id="pass-num-start" class="custom-checkbox">
+                <span class="checkbox-text">START_OF_PHRASE (42phrase)</span>
+              </label>
+              <label class="custom-checkbox-label">
+                <input type="checkbox" id="pass-num-end" class="custom-checkbox">
+                <span class="checkbox-text">END_OF_PHRASE (phrase89)</span>
+              </label>
+            </div>
+
+            <div class="config-group-box">
+              <span class="group-box-title">MUTATION_RULES</span>
+              <label class="custom-checkbox-label mb-2">
+                <input type="checkbox" id="pass-leet" class="custom-checkbox">
+                <span class="checkbox-text">ENABLE_LEETSPEAK (e->3, a->4)</span>
+              </label>
+              <label class="custom-checkbox-label">
+                <input type="checkbox" id="pass-sep-special" class="custom-checkbox" checked>
+                <span class="checkbox-text">RANDOM_SPECIAL_SEPARATOR</span>
+              </label>
+            </div>
           </div>
 
+          <!-- Output Box -->
           <div class="form-group mb-4 copy-container">
             <input type="text" id="pass-output" readonly placeholder=" " style="color: var(--secondary-color); border-bottom-color: var(--secondary-color);" />
             <label for="pass-output" class="form-label" style="color: var(--secondary-color);">
@@ -225,16 +226,14 @@
 
           <button type="button" class="socterminal-btn full-width" id="generate-pass-btn">
             <span></span><span></span><span></span><span></span>
-            <span class="btn-text">GENERATE</span>
+            <span class="btn-text">GENERATE_ENTROPY</span>
           </button>
 
         </div>
       </div>
     </section>
 
-    <!-- ==========================================
-         5. WHEEL OF SPIN (SHIFT SELECTOR)
-         ========================================== -->
+    <!-- 5. WHEEL OF SPIN -->
     <section class="content-panel panel-wheel">
       <div class="glitch-card" id="capture-area">
         <div class="card-header">
@@ -243,7 +242,7 @@
         </div>
         <div class="card-body">
           
-          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Gamified probability engine using wheel of spinner for randomizing targets / selector.</p>
+          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Gamified probability engine for randomizing targets, tasks, or shift assignments.</p>
 
           <div class="wheel-grid">
             
@@ -260,9 +259,13 @@
               </div>
             </div>
 
+            <!-- Configuration Column (Themed Gear SVG) -->
             <div class="config-col">
               <div class="config-header">
-                <span class="card-title text-secondary">⚙️ CONFIGURATION</span>
+                <span class="card-title text-secondary flex items-center gap-2">
+                  <svg style="vertical-align: -3px; margin-right: 6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                  CONFIGURATION
+                </span>
                 <span id="activeCount" class="badge">0 ACTIVE</span>
               </div>
               
@@ -274,16 +277,20 @@
               <div class="names-scroll-container" id="namesList"></div>
 
               <div class="btn-group mt-4">
-                <button id="updateBtn" class="socterminal-btn full-width mb-2">
+                <button id="updateBtn" class="socterminal-btn full-width">
                   <span></span><span></span><span></span><span></span>
                   <span class="btn-text">RESET_ALL</span>
                 </button>
               </div>
             </div>
 
+            <!-- History Column (Themed Clock/Log SVG) -->
             <div class="history-col">
                <div class="config-header mb-4">
-                <span class="card-title text-secondary">📜 SPIN_HISTORY</span>
+                <span class="card-title text-secondary flex items-center gap-2">
+                  <svg style="vertical-align: -3px; margin-right: 6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  SPIN_HISTORY
+                </span>
               </div>
               <div class="history-table-container">
                 <table class="history-table">
@@ -308,7 +315,6 @@
 
   </main>
 
-  <!-- Telemetry & Status Footer -->
   <footer class="spa-footer">
     <div class="footer-section">
       <span style="color: var(--primary-color);">SYS_TIME: </span>
