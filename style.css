@@ -1,6 +1,3 @@
-/* =========================================
-   BASE RULES & GLOBAL VARIABLES
-   ========================================= */
 :root {
   --bg-main: #050505;
   --bg-card: #0d0d0d;
@@ -12,27 +9,10 @@
   --anim-fast: 0.3s;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background-color: var(--bg-main); color: var(--text-main); font-family: var(--font-family); overflow-x: hidden; }
+input[type="radio"][name="terminal-tabs"] { display: none; }
 
-html, body {
-  height: 100%;
-  background-color: var(--bg-main);
-  color: var(--text-main);
-  font-family: var(--font-family);
-  overflow-x: hidden;
-}
-
-input[type="radio"][name="terminal-tabs"] {
-  display: none;
-}
-
-/* =========================================
-   LAYOUT STRUCTURE (SPA)
-   ========================================= */
 .spa-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
 .spa-header { display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-header); border-bottom: 2px solid rgba(0, 242, 234, 0.2); padding: 0px 1.5rem; height: 60px; position: sticky; top: 0; z-index: 100; }
 .spa-logo { color: var(--primary-color); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; letter-spacing: 0.1em; }
@@ -42,19 +22,13 @@ input[type="radio"][name="terminal-tabs"] {
 .nav-btn { padding: 0 1.2rem; height: 100%; display: flex; align-items: center; color: rgba(0, 242, 234, 0.5); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; cursor: pointer; border-left: 1px solid rgba(0, 242, 234, 0.1); transition: all var(--anim-fast); position: relative; }
 .nav-btn:last-child { border-right: 1px solid rgba(0, 242, 234, 0.1); }
 .nav-btn:hover { color: var(--primary-color); background-color: rgba(0, 242, 234, 0.05); }
-.spa-status { font-size: 0.75rem; color: var(--secondary-color); letter-spacing: 0.05em; }
+
 .spa-content { flex: 1; padding: 2rem 1.5rem; display: flex; justify-content: center; align-items: flex-start; }
 .content-panel { display: none; width: 100%; max-width: 1200px; }
 
-/* =========================================
-   LOGICAL SWITCHING (CSS SPA)
-   ========================================= */
 #tab-email:checked ~ .spa-content .panel-email, #tab-doc:checked ~ .spa-content .panel-doc, #tab-pass:checked ~ .spa-content .panel-pass, #tab-wheel:checked ~ .spa-content .panel-wheel, #tab-bvc:checked ~ .spa-content .panel-bvc { display: block; }
 #tab-email:checked ~ .spa-header .btn-email, #tab-doc:checked ~ .spa-header .btn-doc, #tab-pass:checked ~ .spa-header .btn-pass, #tab-wheel:checked ~ .spa-header .btn-wheel, #tab-bvc:checked ~ .spa-header .btn-bvc { color: var(--bg-main); background-color: var(--primary-color); box-shadow: inset 0 0 10px rgba(0,0,0,0.3), 0 0 15px rgba(0, 242, 234, 0.3); }
 
-/* =========================================
-   COMPONENT STYLES (Cards, Forms, Buttons)
-   ========================================= */
 .glitch-card { background-color: var(--bg-card); border: 1px solid rgba(0, 242, 234, 0.2); box-shadow: 0 0 25px rgba(0, 242, 234, 0.05); border-radius: 4px; width: 100%; }
 .card-header { display: flex; justify-content: space-between; align-items: center; background-color: rgba(0, 0, 0, 0.4); padding: 0.75rem 1.2rem; border-bottom: 1px solid rgba(0, 242, 234, 0.15); }
 .card-title { color: var(--primary-color); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; }
@@ -67,6 +41,8 @@ input[type="radio"][name="terminal-tabs"] {
 .form-group input:focus { border-color: var(--primary-color); }
 .form-label { position: absolute; top: 0.6em; left: 0; font-size: 1rem; color: var(--primary-color); opacity: 0.5; text-transform: uppercase; pointer-events: none; transition: all var(--anim-fast) ease; }
 .form-group input:focus + .form-label, .form-group input:not(:placeholder-shown) + .form-label, .form-group textarea:focus + .form-label, .form-group textarea:not(:placeholder-shown) + .form-label { top: -1.3em; font-size: 0.75rem; opacity: 1; }
+
+/* REPLACED: .antigravity-btn -> .socterminal-btn globally */
 .socterminal-btn { position: relative; padding: 0.9em 2em; background-color: transparent; border: none; outline: 1px solid rgba(0, 242, 234, 0.2); color: var(--primary-color); font-family: inherit; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; overflow: hidden; transition: all var(--anim-fast) ease; }
 .socterminal-btn.full-width { width: 100%; }
 .socterminal-btn.alt-btn { outline: 1px solid rgba(250, 240, 0, 0.2); color: var(--secondary-color); }
@@ -87,9 +63,6 @@ input[type="radio"][name="terminal-tabs"] {
 @keyframes chase-left { 0% { bottom: -100%; } 50%, 100% { bottom: 100%; } }
 .socterminal-btn .btn-text { position: relative; z-index: 2; }
 
-/* =========================================
-   PASSWORD GENERATOR STYLES
-   ========================================= */
 .pass-config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 0.5rem; }
 .custom-select { width: 100%; background: transparent; border: none; border-bottom: 2px solid rgba(0, 242, 234, 0.25); padding: 0.6em 0; font-size: 0.9rem; color: var(--text-main); font-family: inherit; outline: none; appearance: none; cursor: pointer; }
 .custom-select:focus { border-color: var(--primary-color); }
@@ -102,9 +75,6 @@ input[type="radio"][name="terminal-tabs"] {
 .custom-checkbox::before { content: ""; width: 0.65em; height: 0.65em; transform: scale(0); transition: 120ms transform ease-in-out; box-shadow: inset 1em 1em var(--primary-color); background-color: transform-origin: bottom left; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); }
 .custom-checkbox:checked::before { transform: scale(1); }
 
-/* =========================================
-   WHEEL OF SPIN STYLES
-   ========================================= */
 .wheel-grid { display: grid; grid-template-columns: 2fr 1fr 1.5fr; gap: 2rem; align-items: flex-start; }
 .text-center { text-align: center; }
 #wheel-container { position: relative; display: inline-block; cursor: grab; }
@@ -129,38 +99,11 @@ input[type="radio"][name="terminal-tabs"] {
 .history-table-container::-webkit-scrollbar { width: 4px; }
 .history-table-container::-webkit-scrollbar-thumb { background: var(--secondary-color); border-radius: 4px; }
 
-/* =========================================
-   BVC MODULE & TEXTAREA STYLES
-   ========================================= */
 .custom-textarea { width: 100%; background: rgba(0, 242, 234, 0.02); border: 1px solid transparent; border-bottom: 2px solid rgba(0, 242, 234, 0.25); padding: 1em 0.5em; font-size: 0.9rem; color: var(--text-main); font-family: inherit; outline: none; resize: vertical; transition: all var(--anim-fast); }
 .custom-textarea:focus { border-color: var(--primary-color); background: rgba(0, 242, 234, 0.05); }
 
-/* =========================================
-   FOOTER STYLES
-   ========================================= */
-.spa-footer { 
-  border-top: 1px solid rgba(0, 242, 234, 0.15); 
-  background-color: var(--bg-header); 
-  padding: 0.75rem 1.5rem; 
-  display: flex; 
-  justify-content: space-between; /* Pushes time to left, uptime to right */
-  align-items: center; 
-  font-size: 0.75rem; 
-  letter-spacing: 0.05em; 
-  margin-top: auto; 
-}
+.spa-footer { border-top: 1px solid rgba(0, 242, 234, 0.15); background-color: var(--bg-header); padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; letter-spacing: 0.05em; margin-top: auto; }
 
-@media (max-width: 768px) {
-  .spa-footer { 
-    flex-direction: column;
-    gap: 0.5rem;
-    justify-content: center; 
-    padding: 1rem; 
-  }
-}
-/* =========================================
-   ADDITIONAL UI ENHANCEMENTS
-   ========================================= */
 .config-group-box { border: 1px solid rgba(0, 242, 234, 0.15); background: rgba(0, 0, 0, 0.4); padding: 1rem; border-radius: 4px; position: relative; display: flex; flex-direction: column; }
 .group-box-title { position: absolute; top: -0.6em; left: 0.5rem; background: var(--bg-card); padding: 0 0.5rem; font-size: 0.7rem; color: var(--primary-color); opacity: 0.8; }
 .copy-container { position: relative; }
@@ -172,127 +115,36 @@ input[type="radio"][name="terminal-tabs"] {
 .center-play-button.spinning-state { border-color: var(--secondary-color); color: var(--secondary-color); box-shadow: 0 0 20px rgba(250, 240, 0, 0.4); pointer-events: none; }
 .center-play-button.spinning-state svg { opacity: 0.5; }
 
-/* =========================================
-   MOBILE RESPONSIVENESS
-   ========================================= */
+.hidden-input { display: none !important; }
+.cyber-dropzone { border: 1px dashed rgba(0, 242, 234, 0.35); background: rgba(0, 242, 234, 0.015); padding: 2rem 1.5rem; border-radius: 4px; text-align: center; cursor: pointer; transition: all var(--anim-fast) ease-in-out; }
+.cyber-dropzone:hover, .cyber-dropzone.active-drag { border-color: var(--primary-color); background: rgba(0, 242, 234, 0.06); box-shadow: inset 0 0 15px rgba(0, 242, 234, 0.15), 0 0 15px rgba(0, 242, 234, 0.1); }
+.dropzone-label { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; pointer-events: none; }
+.dropzone-label svg { width: 32px; height: 32px; color: var(--primary-color); margin-bottom: 0.25rem; transition: transform var(--anim-fast); }
+.cyber-dropzone:hover svg { transform: translateY(-3px); }
+.main-prompt { color: var(--text-main); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.1em; }
+.sub-prompt { font-size: 0.75rem; color: #777; letter-spacing: 0.05em; }
+.sub-prompt .highlight { color: var(--primary-color); text-decoration: underline; }
+.allowed-tag { margin-top: 0.5rem; font-size: 0.65rem; color: var(--secondary-color); opacity: 0.8; }
+
+.sys-alert { margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(250, 240, 0, 0.08); border-left: 3px solid var(--secondary-color); color: var(--secondary-color); font-size: 0.8rem; line-height: 1.4; word-break: break-all; }
+.sys-alert.hidden { display: none; }
+.file-manifest { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+.manifest-row { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(0, 242, 234, 0.15); padding: 0.5rem 0.75rem; font-size: 0.75rem; color: var(--primary-color); border-radius: 2px; text-align: left; }
+
 @media (max-width: 1024px) { .wheel-grid { grid-template-columns: 1fr; } }
 @media (max-width: 768px) {
   .spa-header { flex-direction: column; height: auto; padding: 0.75rem; gap: 0.75rem; }
   .spa-nav { width: 100%; justify-content: space-between; overflow-x: auto; white-space: nowrap; border-top: 1px solid rgba(0, 242, 234, 0.1); padding-top: 0.5rem; }
   .nav-btn { padding: 0.5rem 0.6rem; font-size: 0.7rem; border: none !important; }
-  .spa-status { font-size: 0.65rem; text-align: center; line-height: 1.5; }
   .spa-content { padding: 1rem 0.5rem; }
   .card-body { padding: 1.5rem 1rem; }
   canvas#wheelCanvas { width: 100%; height: auto; max-width: 400px; }
   .pass-config-grid { grid-template-columns: 1fr; gap: 0; }
-  .spa-footer { justify-content: center; padding: 1rem; }
+  .spa-footer { flex-direction: column; gap: 0.5rem; justify-content: center; padding: 1rem; }
 }
+
 @media (prefers-reduced-motion: reduce) {
   .socterminal-btn span:not(.btn-text) { animation: none !important; display: none; }
   .socterminal-btn { border: 2px solid var(--primary-color); }
   .blinking-cursor { animation: none; }
-}
-
-/* =========================================
-   CYBER DROPZONE & ALERT STYLES
-   ========================================= */
-
-.hidden-input {
-  display: none !important;
-}
-
-.cyber-dropzone {
-  border: 1px dashed rgba(0, 242, 234, 0.35);
-  background: rgba(0, 242, 234, 0.015);
-  padding: 2rem 1.5rem;
-  border-radius: 4px;
-  text-align: center;
-  cursor: pointer;
-  transition: all var(--anim-fast) ease-in-out;
-}
-
-.cyber-dropzone:hover,
-.cyber-dropzone.active-drag {
-  border-color: var(--primary-color);
-  background: rgba(0, 242, 234, 0.06);
-  box-shadow: inset 0 0 15px rgba(0, 242, 234, 0.15), 0 0 15px rgba(0, 242, 234, 0.1);
-}
-
-.dropzone-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  pointer-events: none; /* Prevents drag-flicker bugs over child text */
-}
-
-.dropzone-label svg {
-  width: 32px;
-  height: 32px;
-  color: var(--primary-color);
-  margin-bottom: 0.25rem;
-  transition: transform var(--anim-fast);
-}
-
-.cyber-dropzone:hover svg {
-  transform: translateY(-3px);
-}
-
-.main-prompt {
-  color: var(--text-main);
-  font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.1em;
-}
-
-.sub-prompt {
-  font-size: 0.75rem;
-  color: #777;
-  letter-spacing: 0.05em;
-}
-
-.sub-prompt .highlight {
-  color: var(--primary-color);
-  text-decoration: underline;
-}
-
-.allowed-tag {
-  margin-top: 0.5rem;
-  font-size: 0.65rem;
-  color: var(--secondary-color);
-  opacity: 0.8;
-}
-
-/* Warning Alerts */
-.sys-alert {
-  margin-top: 1rem;
-  padding: 0.75rem 1rem;
-  background: rgba(250, 240, 0, 0.08);
-  border-left: 3px solid var(--secondary-color);
-  color: var(--secondary-color);
-  font-size: 0.8rem;
-  line-height: 1.4;
-  word-break: break-all;
-}
-
-.sys-alert.hidden {
-  display: none;
-}
-
-/* Mounted File Manifest List */
-.file-manifest {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.manifest-row {
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(0, 242, 234, 0.15);
-  padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
-  color: var(--primary-color);
-  border-radius: 2px;
-  text-align: left;
 }
