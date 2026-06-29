@@ -171,12 +171,12 @@
             </label>
           </div>
 
-          <!-- Redesigned Output & Button Layout (2x Size) -->
+      <!-- Redesigned Output & Button Layout (2x Size & Aligned) -->
           <div class="pass-output-container">
             <!-- Output Field -->
-            <div class="form-group mb-0 copy-container pass-output-box">
-              <input type="text" id="pass-output" readonly placeholder="Awaiting Generation..." />
-              <label for="pass-output" class="form-label">
+            <div class="form-group pass-output-box">
+              <input type="text" id="pass-output" readonly placeholder="Awaiting Generation..." style="color: var(--secondary-color); border-bottom-color: var(--secondary-color);" />
+              <label for="pass-output" class="form-label" style="color: var(--secondary-color);">
                 GENERATED_PASSPHRASE <span id="pass-length-display" style="color: var(--primary-color); font-weight: bold;">[0 CHARS]</span>
               </label>
               <button id="copy-pass-btn" class="copy-btn" title="Copy to clipboard">
@@ -190,7 +190,6 @@
               <span class="btn-text">GENERATE</span>
             </button>
           </div>
-
         </div>
       </div>
     </section>
