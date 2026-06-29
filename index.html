@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SOC Terminal</title>
   
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://i.postimg.cc data:; connect-src 'self' https://raw.githubusercontent.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' https://i.postimg.cc data:; connect-src 'self' https://raw.githubusercontent.com;">
 
   <link rel="stylesheet" href="style.css">
   
@@ -13,17 +13,22 @@
     .content-panel { max-width: 96% !important; width: 100%; }
   </style>
 
+  <!-- External Libraries (SRI Protected) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQmJb1OcdXV43TzVvXU/6o/D7fG1F/GtdA2bQilU1Oa49FqV2nZ3Q7I1sOa+G5Bq1wQf+O3O8OqZ1wA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- External Logic File -->
   <script src="socterminal.js" defer></script>
 </head>
 <body>
 
 <div class="spa-wrapper">
+  <!-- Tab Controllers -->
   <input type="radio" name="terminal-tabs" id="tab-email" checked>
   <input type="radio" name="terminal-tabs" id="tab-doc">
   <input type="radio" name="terminal-tabs" id="tab-bvc">
   <input type="radio" name="terminal-tabs" id="tab-pass">
-  <input type="radio" name="terminal-tabs" id="tab-wheel">
+  <input type="radio" name="terminal-tabs" id="tab-picker">
 
   <header class="spa-header">
     <div class="spa-logo">
@@ -42,7 +47,7 @@
       <label for="tab-doc" class="nav-btn btn-doc" data-text="FILE_INSPECTOR">FILE_INSPECTOR</label>
       <label for="tab-bvc" class="nav-btn btn-bvc" data-text="IOC_ENRICHER">IOC_ENRICHER</label>
       <label for="tab-pass" class="nav-btn btn-pass" data-text="PASS_GENERATOR">PASS_GENERATOR</label>
-      <label for="tab-wheel" class="nav-btn btn-wheel" data-text="WHEEL_OF_SPIN">WHEEL_OF_SPIN</label>
+      <label for="tab-picker" class="nav-btn btn-picker" data-text="RANDOM_PICKER">RANDOM_PICKER</label>
     </nav>
   </header>
 
@@ -145,168 +150,148 @@
           <div class="card-dots"><span></span><span></span><span></span></div>
         </div>
         <div class="card-body">
-          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Cryptographically secure passphrase generator featuring customizable length, entropy injections, and leetspeak substitution rules.</p>
+          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Cryptographically secure passphrase generator utilizing algorithmic entropy, forced leetspeak, reverse Caesar ciphers, and randomized capitalization.</p>
           
-          <!-- Grid 1: Numeric Targets -->
-          <div class="pass-config-grid">
-            <div class="form-group">
+          <div class="pass-config-grid mb-6">
+            <div class="form-group mb-0">
               <input type="number" id="pass-words" min="1" max="10" value="3" required placeholder=" " />
               <label for="pass-words" class="form-label">WORD_COUNT</label>
             </div>
-            <div class="form-group">
+            
+            <div class="form-group mb-0">
               <input type="number" id="pass-min-length" min="8" max="64" value="16" required placeholder=" " />
               <label for="pass-min-length" class="form-label">MIN_LENGTH</label>
             </div>
           </div>
 
-          <!-- Grid 2: Structural Rules -->
-          <div class="pass-config-grid mb-4">
-            <div class="config-group-box">
-              <span class="group-box-title">SPECIAL_CHARS_POS</span>
-              <label class="custom-checkbox-label mb-2">
-                <input type="checkbox" id="pass-spec-start" class="custom-checkbox">
-                <span class="checkbox-text">START_OF_PHRASE (!phrase)</span>
-              </label>
-              <label class="custom-checkbox-label">
-                <input type="checkbox" id="pass-spec-end" class="custom-checkbox">
-                <span class="checkbox-text">END_OF_PHRASE (phrase#)</span>
-              </label>
-            </div>
-
-            <div class="config-group-box">
-              <span class="group-box-title">CAPITALIZATION_RULES</span>
-              <label class="custom-checkbox-label mb-2">
-                <input type="checkbox" id="pass-cap-start" class="custom-checkbox">
-                <span class="checkbox-text">FIRST_LETTER (Word)</span>
-              </label>
-              <label class="custom-checkbox-label">
-                <input type="checkbox" id="pass-cap-end" class="custom-checkbox">
-                <span class="checkbox-text">LAST_LETTER (worD)</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Grid 3: Advanced Entropy & Numeric Injection -->
-          <div class="pass-config-grid mb-4">
-            <div class="config-group-box">
-              <span class="group-box-title">NUMERIC_INJECTION</span>
-              <label class="custom-checkbox-label mb-2">
-                <input type="checkbox" id="pass-num-start" class="custom-checkbox">
-                <span class="checkbox-text">START_OF_PHRASE (42phrase)</span>
-              </label>
-              <label class="custom-checkbox-label">
-                <input type="checkbox" id="pass-num-end" class="custom-checkbox">
-                <span class="checkbox-text">END_OF_PHRASE (phrase89)</span>
-              </label>
-            </div>
-
-            <div class="config-group-box">
-              <span class="group-box-title">MUTATION_RULES</span>
-              <label class="custom-checkbox-label mb-2">
-                <input type="checkbox" id="pass-leet" class="custom-checkbox">
-                <span class="checkbox-text">ENABLE_LEETSPEAK (e->3, a->4, B->8, 0->O, i->1)</span>
-              </label>
-              <label class="custom-checkbox-label">
-                <input type="checkbox" id="pass-sep-special" class="custom-checkbox" checked>
-                <span class="checkbox-text">RANDOM_SPECIAL_SEPARATOR</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Output Box -->
-          <div class="form-group mb-4 copy-container">
-            <input type="text" id="pass-output" readonly placeholder=" " style="color: var(--secondary-color); border-bottom-color: var(--secondary-color);" />
-            <label for="pass-output" class="form-label" style="color: var(--secondary-color);">
-              GENERATED_PASSPHRASE <span id="pass-length-display" style="color: var(--primary-color); font-weight: bold;">[0 CHARS]</span>
+          <div class="checkbox-wrapper mb-6">
+            <label class="custom-checkbox-label">
+              <input type="checkbox" id="pass-sep-special" class="custom-checkbox" checked>
+              <span class="checkbox-text">USE_RANDOM_SPECIAL_CHAR_AS_WORD_SEPARATOR</span>
             </label>
-            <button id="copy-pass-btn" class="copy-btn" title="Copy to clipboard">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </div>
+
+          <!-- Redesigned Output & Button Layout (2x Size) -->
+          <div class="pass-output-container">
+            <!-- Output Field -->
+            <div class="form-group mb-0 copy-container pass-output-box">
+              <input type="text" id="pass-output" readonly placeholder="Awaiting Generation..." />
+              <label for="pass-output" class="form-label">
+                GENERATED_PASSPHRASE <span id="pass-length-display" style="color: var(--primary-color); font-weight: bold;">[0 CHARS]</span>
+              </label>
+              <button id="copy-pass-btn" class="copy-btn" title="Copy to clipboard">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </button>
+            </div>
+
+            <!-- Generate Button -->
+            <button type="button" class="socterminal-btn generate-btn-massive" id="generate-pass-btn">
+              <span></span><span></span><span></span><span></span>
+              <span class="btn-text">GENERATE</span>
             </button>
           </div>
-
-          <button type="button" class="socterminal-btn full-width" id="generate-pass-btn">
-            <span></span><span></span><span></span><span></span>
-            <span class="btn-text">GENERATE</span>
-          </button>
 
         </div>
       </div>
     </section>
 
-    <!-- 5. WHEEL OF SPIN -->
-    <section class="content-panel panel-wheel">
-      <div class="glitch-card" id="capture-area">
+    <!-- 5. RANDOM PICKER (ARISAN PORT) -->
+    <section class="content-panel panel-picker">
+      <div class="glitch-card">
         <div class="card-header">
-          <div class="card-title"><span>[SUB_SYS] WHEEL_OF_SPIN</span></div>
+          <div class="card-title"><span>[SUB_SYS] RANDOM_PICKER</span></div>
           <div class="card-dots"><span></span><span></span><span></span></div>
         </div>
         <div class="card-body">
           
-          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Gamified probability engine for randomizing targets, tasks, or shift assignments.</p>
+          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Data stream visualization engine for randomized target isolation and selection.</p>
 
-          <div class="wheel-grid">
+          <div class="picker-grid">
             
-            <div class="wheel-col text-center">
-              <div id="wheel-container">
-                <div class="pointer"></div>
-                <div class="center-play-button" id="spinPlayBtn">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-                <canvas id="wheelCanvas" width="450" height="450"></canvas>
+            <!-- Left: Visual Data Stream Canvas -->
+            <div class="picker-col-canvas flex flex-col gap-4">
+              <div class="status-bar-picker flex justify-between">
+                <span><svg style="display:inline; margin-right:4px;" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> [ NODE_VISUALIZATION_FEED ]</span>
+                <span id="recStatus" style="font-weight:bold; color:var(--primary-color);">IDLE</span>
               </div>
-              <div id="emptyMessage" class="hidden panel-placeholder mt-4">
-                > SEMUA SEGMEN TERELIMINASI. INIT ULANG DIPERLUKAN.
-              </div>
-            </div>
 
-            <!-- Configuration Column (Themed Gear SVG) -->
-            <div class="config-col">
-              <div class="config-header">
-                <span class="card-title text-secondary flex items-center gap-2">
-                  <svg style="vertical-align: -3px; margin-right: 6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                  CONFIGURATION
-                </span>
-                <span id="activeCount" class="badge">0 ACTIVE</span>
+              <div class="canvas-wrapper relative aspect-video w-full">
+                <canvas id="arisanCanvas" class="w-full h-full absolute inset-0"></canvas>
+                <div class="scanline-canvas"></div>
+                
+                <div id="canvasStatusText" class="canvas-overlay-text">
+                  MEM: OK <br>
+                  CPU: 12% <br>
+                  ENTITIES: <span id="canvasEntityCount">0</span>
+                </div>
               </div>
               
-              <div class="form-group mb-4">
-                <input type="number" id="segmentCount" min="1" max="48" value="6" required placeholder=" " />
-                <label for="segmentCount" class="form-label">INITIAL_SEGMENTS</label>
-              </div>
-
-              <div class="names-scroll-container" id="namesList"></div>
-
-              <div class="btn-group mt-4">
-                <button id="updateBtn" class="socterminal-btn full-width">
-                  <span></span><span></span><span></span><span></span>
-                  <span class="btn-text">RESET_ALL</span>
+              <!-- Execution Box -->
+              <div class="config-group-box">
+                <div class="flex justify-between items-center mb-4 pb-2" style="border-bottom: 1px solid rgba(0, 242, 234, 0.2);">
+                    <label class="text-xs font-bold" style="color: var(--primary-color);">> SET_DURATION_SEC =</label>
+                    <input type="number" id="inputDurasi" min="3" value="3" class="terminal-input w-16 text-center font-bold text-base bg-transparent border-b border-primary outline-none" style="color: var(--primary-color);" title="Minimal 3 detik">
+                </div>
+                
+                <button id="btnKocok" class="socterminal-btn full-width" style="font-size: 1.1rem; padding: 1rem;">
+                    <span></span><span></span><span></span><span></span>
+                    <span class="btn-text">INITIATE_DATA_SCRAMBLE</span>
                 </button>
               </div>
             </div>
 
-            <!-- History Column (Themed Clock/Log SVG) -->
-            <div class="history-col">
-               <div class="config-header mb-4">
-                <span class="card-title text-secondary flex items-center gap-2">
-                  <svg style="vertical-align: -3px; margin-right: 6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                  SPIN_HISTORY
-                </span>
-              </div>
-              <div class="history-table-container">
-                <table class="history-table">
-                  <thead>
-                    <tr>
-                      <th>RND</th>
-                      <th>RESULT</th>
-                      <th>TIME</th>
-                    </tr>
-                  </thead>
-                  <tbody id="historyBody"></tbody>
-                </table>
-                <div id="noHistory" class="panel-placeholder text-center mt-4">> No spins recorded.</div>
-              </div>
-            </div>
+            <!-- Right: Database & Logs -->
+            <div class="picker-col-data flex flex-col gap-4">
+              
+              <!-- Database Input -->
+              <div class="config-group-box flex flex-col h-full" style="max-height: 400px;">
+                <div class="flex justify-between items-center mb-3 pb-2" style="border-bottom: 1px solid rgba(0, 242, 234, 0.2);">
+                    <h3 class="text-sm font-bold tracking-wider" style="color: var(--primary-color);">
+                        <svg style="display:inline; margin-right:4px;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                        [ ENTITY_DATABASE ]
+                    </h3>
+                    <span class="text-[10px] opacity-70">TOTAL: <span id="totalPeserta">0</span></span>
+                </div>
+                
+                <div class="flex gap-2 mb-3 items-end">
+                    <div class="flex-1 relative">
+                        <label class="form-label" style="top: -1.2em; font-size: 0.7rem;">> INPUT_ID</label>
+                        <input type="text" id="inputNama" placeholder="TYPE_HERE..." class="terminal-input w-full py-1 text-sm bg-black/30 px-2 outline-none border-b border-primary" style="color: var(--text-main); border-bottom-color: rgba(0,242,234,0.3);">
+                        <input type="hidden" id="editIndex" value="-1">
+                    </div>
+                    <button id="btnSimpan" class="socterminal-btn" style="padding: 0.3rem 1rem; font-size: 0.8rem;">
+                      <span></span><span></span><span></span><span></span>
+                      <span class="btn-text">INSERT</span>
+                    </button>
+                </div>
 
+                <div class="flex-1 p-2 border overflow-hidden flex flex-col" style="background: rgba(0,242,234,0.05); border-color: rgba(0,242,234,0.15);">
+                    <ul id="listPeserta" class="flex-1 overflow-y-auto space-y-1 pr-2 text-xs list-reset custom-scroll-y"></ul>
+                </div>
+              </div>
+
+              <!-- Logs -->
+              <div class="config-group-box flex flex-col h-full" style="max-height: 300px;">
+                <div class="flex justify-between items-center mb-3 pb-2" style="border-bottom: 1px solid rgba(0, 242, 234, 0.2);">
+                    <h3 class="text-sm font-bold tracking-wider" style="color: var(--primary-color);">
+                        <svg style="display:inline; margin-right:4px;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        [ EXTRACTION_LOGS ]
+                    </h3>
+                    <button id="btnPurge" class="text-[10px] socterminal-btn alt-btn" style="padding: 0.2rem 0.5rem; font-size: 0.7rem;">
+                        <span></span><span></span><span></span><span></span>
+                        <span class="btn-text">PURGE</span>
+                    </button>
+                </div>
+                
+                <div class="flex-1 p-2 border overflow-hidden flex flex-col relative" style="background: rgba(0,242,234,0.05); border-color: rgba(0,242,234,0.15);">
+                    <ul id="listPemenang" class="flex-1 overflow-y-auto space-y-1 pr-2 text-xs z-10 custom-scroll-y list-reset"></ul>
+                    <div id="emptyPemenang" class="absolute inset-0 flex items-center justify-center opacity-30 text-[10px] pointer-events-none">
+                        > NO_DATA_EXTRACTED
+                    </div>
+                </div>
+              </div>
+
+            </div>
           </div>
 
         </div>
@@ -314,6 +299,29 @@
     </section>
 
   </main>
+
+  <!-- Modal Target Acquired -->
+  <div id="modalPemenang" class="fixed-modal hidden">
+    <div class="modal-content glitch-card">
+        <div class="text-[10px] text-left opacity-50 mb-2 font-mono" style="color: var(--primary-color);">
+            [SYSTEM] >> MATCHING_ALGORITHM_COMPLETE <br>
+            [SYSTEM] >> ISOLATING_TARGET...
+        </div>
+        <h2 class="text-xl md:text-3xl font-bold mb-1 border-b pb-2 inline-block" style="border-color: rgba(0,242,234,0.3); color: var(--secondary-color);">> TARGET_ACQUIRED</h2>
+        
+        <div class="target-box relative overflow-hidden group my-6 py-10 px-4 text-center border" style="background: rgba(0,242,234,0.05); border-color: rgba(0,242,234,0.5);">
+            <div class="scanline-modal absolute top-0 left-0 w-full h-[1px] shadow"></div>
+            <div id="namaPemenangModal" class="text-3xl md:text-5xl font-bold tracking-widest break-words animate-pulse" style="color: var(--text-main); text-shadow: 0 0 10px var(--primary-color);">
+                NAMA_PEMENANG
+            </div>
+        </div>
+        
+        <button id="btnAcknowledge" class="socterminal-btn full-width py-3 font-bold text-sm tracking-widest">
+            <span></span><span></span><span></span><span></span>
+            <span class="btn-text">[ ACKNOWLEDGE & CLEAR ]</span>
+        </button>
+    </div>
+  </div>
 
   <footer class="spa-footer">
     <div class="footer-section">
