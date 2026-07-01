@@ -180,3 +180,68 @@ canvas { image-rendering: pixelated; }
   .socterminal-btn { border: 2px solid var(--primary-color); }
   .blinking-cursor { animation: none; }
 }
+
+/* ... (Ignore upper part) ... */
+
+/* Logical Switching Tab for Watermark */
+#tab-email:checked ~ .spa-content .panel-email, 
+#tab-doc:checked ~ .spa-content .panel-doc, 
+#tab-pass:checked ~ .spa-content .panel-pass, 
+#tab-picker:checked ~ .spa-content .panel-picker, 
+#tab-watermark:checked ~ .spa-content .panel-watermark,
+#tab-bvc:checked ~ .spa-content .panel-bvc { display: block; }
+
+#tab-email:checked ~ .spa-header .btn-email, 
+#tab-doc:checked ~ .spa-header .btn-doc, 
+#tab-pass:checked ~ .spa-header .btn-pass, 
+#tab-picker:checked ~ .spa-header .btn-picker, 
+#tab-watermark:checked ~ .spa-header .btn-watermark,
+#tab-bvc:checked ~ .spa-header .btn-bvc { 
+  color: var(--bg-main); 
+  background-color: var(--primary-color); 
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.3), 0 0 15px rgba(0, 242, 234, 0.3); 
+}
+
+/* ... (Garis form dan button dibiarkan sama) ... */
+
+/* GRID LAYOUT WATERMARKER */
+.watermark-grid { 
+  display: grid; 
+  grid-template-columns: 1fr 2fr; 
+  gap: 2rem; 
+  align-items: flex-start; 
+}
+
+/* CUSTOM RANGE SLIDERS (Sistem UI SOC) */
+.custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 242, 234, 0.2);
+  outline: none;
+  border-radius: 2px;
+  transition: all var(--anim-fast);
+}
+
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--primary-color);
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--primary-color);
+  transition: transform var(--anim-fast);
+}
+
+.custom-range::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+
+/* ... (Code Picker/Random Generator) ... */
+
+@media (max-width: 1024px) { 
+  .picker-grid, .watermark-grid { grid-template-columns: 1fr; } 
+}
+/* Ignore the rest ... */
