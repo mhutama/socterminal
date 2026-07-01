@@ -138,16 +138,16 @@
       </div>
     </section>
 
-    <section class="content-panel panel-pass">
+	<section class="content-panel panel-pass">
       <div class="glitch-card">
         <div class="card-header">
           <div class="card-title"><span>[TOOL] PASS_GENERATOR</span></div>
           <div class="card-dots"><span></span><span></span><span></span></div>
         </div>
         <div class="card-body">
-          <p class="panel-placeholder mb-4" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Cryptographically secure passphrase generator utilizing algorithmic entropy, forced leetspeak, reverse Caesar ciphers, and randomized capitalization.</p>
+          <p class="panel-placeholder mb-6" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Cryptographically secure passphrase generator utilizing algorithmic entropy, forced leetspeak, reverse Caesar ciphers, and randomized capitalization.</p>
           
-          <div class="pass-config-grid mb-6">
+          <div class="pass-input-row">
             <div class="form-group mb-0">
               <input type="number" id="pass-words" min="1" max="10" value="3" required placeholder=" " />
               <label for="pass-words" class="form-label">WORD_COUNT</label>
@@ -157,36 +157,42 @@
               <input type="number" id="pass-min-length" min="8" max="64" value="16" required placeholder=" " />
               <label for="pass-min-length" class="form-label">MIN_LENGTH</label>
             </div>
+
+            <div class="checkbox-wrapper mb-0 flex-center">
+              <label class="custom-checkbox-label">
+                <input type="checkbox" id="pass-sep-special" class="custom-checkbox" checked>
+                <span class="checkbox-text">USE_RANDOM_SPECIAL_CHAR_AS_WORD_SEPARATOR</span>
+              </label>
+            </div>
           </div>
 
-          <div class="checkbox-wrapper mb-6">
-            <label class="custom-checkbox-label">
-              <input type="checkbox" id="pass-sep-special" class="custom-checkbox" checked>
-              <span class="checkbox-text">USE_RANDOM_SPECIAL_CHAR_AS_WORD_SEPARATOR</span>
-            </label>
-          </div>
-
-          <div class="pass-output-container">
+          <div class="pass-output-stack">
+            
             <div class="form-group pass-output-box">
               <input type="text" id="pass-output" readonly placeholder="Awaiting Generation..." style="color: var(--secondary-color); border-bottom-color: var(--secondary-color);" />
               <label for="pass-output" class="form-label" style="color: var(--secondary-color);">
-                GENERATED_PASSPHRASE <span id="pass-length-display" style="color: var(--primary-color); font-weight: bold;">[0 CHARS]</span>
+                GENERATED_PASSPHRASE
               </label>
               <button id="copy-pass-btn" class="copy-btn" title="Copy to clipboard">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
               </button>
             </div>
 
+            <div class="char-count-display">
+               <span id="pass-length-display" style="color: var(--primary-color); font-weight: bold; font-size: 1.1rem; letter-spacing: 0.1em;">[0 CHARS]</span>
+            </div>
+
             <button type="button" class="socterminal-btn generate-btn-massive" id="generate-pass-btn">
               <span></span><span></span><span></span><span></span>
               <span class="btn-text">GENERATE</span>
             </button>
+            
           </div>
 
         </div>
       </div>
     </section>
-
+	
     <section class="content-panel panel-picker">
       <div class="glitch-card">
         <div class="card-header">
