@@ -117,7 +117,7 @@ ul.list-reset { list-style: none; margin: 0; padding: 0; }
 }
 
 .pass-output-box input {
-  font-size: 1.1rem !important; 
+  font-size: 1.0rem !important; 
   height: 3.5rem;
   padding: 0.5rem 3.5rem 0.5rem 0 !important; 
   letter-spacing: 0.05em; 
