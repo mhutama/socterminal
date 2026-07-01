@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SOC Terminal</title>
   
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' https://i.postimg.cc data:; connect-src 'self' https://raw.githubusercontent.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' blob: https://i.postimg.cc data:; connect-src 'self' https://raw.githubusercontent.com;">
 
   <link rel="stylesheet" href="style.css">
   
@@ -13,22 +13,20 @@
     .content-panel { max-width: 96% !important; width: 100%; }
   </style>
 
-  <!-- External Libraries (SRI Protected) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQmJb1OcdXV43TzVvXU/6o/D7fG1F/GtdA2bQilU1Oa49FqV2nZ3Q7I1sOa+G5Bq1wQf+O3O8OqZ1wA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
-  <!-- External Logic File -->
   <script src="socterminal.js" defer></script>
 </head>
 <body>
 
 <div class="spa-wrapper">
-  <!-- Tab Controllers -->
   <input type="radio" name="terminal-tabs" id="tab-email" checked>
   <input type="radio" name="terminal-tabs" id="tab-doc">
   <input type="radio" name="terminal-tabs" id="tab-bvc">
   <input type="radio" name="terminal-tabs" id="tab-pass">
   <input type="radio" name="terminal-tabs" id="tab-picker">
+  <input type="radio" name="terminal-tabs" id="tab-watermark">
 
   <header class="spa-header">
     <div class="spa-logo">
@@ -48,12 +46,12 @@
       <label for="tab-bvc" class="nav-btn btn-bvc" data-text="IOC_ENRICHER">IOC_ENRICHER</label>
       <label for="tab-pass" class="nav-btn btn-pass" data-text="PASS_GENERATOR">PASS_GENERATOR</label>
       <label for="tab-picker" class="nav-btn btn-picker" data-text="RANDOM_PICKER">RANDOM_PICKER</label>
+      <label for="tab-watermark" class="nav-btn btn-watermark" data-text="IMG_WATERMARK">IMG_WATERMARK</label>
     </nav>
   </header>
 
   <main class="spa-content">
     
-    <!-- 1. MAIL ANALYZER -->
     <section class="content-panel panel-email">
       <div class="glitch-card">
         <div class="card-header">
@@ -79,7 +77,6 @@
       </div>
     </section>
 
-    <!-- 2. FILE INSPECTOR -->
     <section class="content-panel panel-doc">
       <div class="glitch-card">
         <div class="card-header">
@@ -105,7 +102,6 @@
       </div>
     </section>
 
-    <!-- 3. IOC ENRICHER -->
     <section class="content-panel panel-bvc">
       <div class="glitch-card">
         <div class="card-header">
@@ -142,7 +138,6 @@
       </div>
     </section>
 
-    <!-- 4. PASSWORD GENERATOR -->
     <section class="content-panel panel-pass">
       <div class="glitch-card">
         <div class="card-header">
@@ -155,7 +150,7 @@
           <div class="pass-config-grid mb-6">
             <div class="form-group mb-0">
               <input type="number" id="pass-words" min="1" max="10" value="3" required placeholder=" " />
-              <label for="pass-words" class="form-label">MIN_WORD</label>
+              <label for="pass-words" class="form-label">WORD_COUNT</label>
             </div>
             
             <div class="form-group mb-0">
@@ -171,9 +166,7 @@
             </label>
           </div>
 
-      <!-- Redesigned Output & Button Layout (2x Size & Aligned) -->
           <div class="pass-output-container">
-            <!-- Output Field -->
             <div class="form-group pass-output-box">
               <input type="text" id="pass-output" readonly placeholder="Awaiting Generation..." style="color: var(--secondary-color); border-bottom-color: var(--secondary-color);" />
               <label for="pass-output" class="form-label" style="color: var(--secondary-color);">
@@ -184,17 +177,16 @@
               </button>
             </div>
 
-            <!-- Generate Button -->
             <button type="button" class="socterminal-btn generate-btn-massive" id="generate-pass-btn">
               <span></span><span></span><span></span><span></span>
               <span class="btn-text">GENERATE</span>
             </button>
           </div>
+
         </div>
       </div>
     </section>
 
-    <!-- 5. RANDOM PICKER (ARISAN PORT) -->
     <section class="content-panel panel-picker">
       <div class="glitch-card">
         <div class="card-header">
@@ -207,7 +199,6 @@
 
           <div class="picker-grid">
             
-            <!-- Left: Visual Data Stream Canvas -->
             <div class="picker-col-canvas flex flex-col gap-4">
               <div class="status-bar-picker flex justify-between">
                 <span><svg style="display:inline; margin-right:4px;" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> [ NODE_VISUALIZATION_FEED ]</span>
@@ -225,7 +216,6 @@
                 </div>
               </div>
               
-              <!-- Execution Box -->
               <div class="config-group-box">
                 <div class="flex justify-between items-center mb-4 pb-2" style="border-bottom: 1px solid rgba(0, 242, 234, 0.2);">
                     <label class="text-xs font-bold" style="color: var(--primary-color);">> SET_DURATION_SEC =</label>
@@ -239,10 +229,8 @@
               </div>
             </div>
 
-            <!-- Right: Database & Logs -->
             <div class="picker-col-data flex flex-col gap-4">
               
-              <!-- Database Input -->
               <div class="config-group-box flex flex-col h-full" style="max-height: 400px;">
                 <div class="flex justify-between items-center mb-3 pb-2" style="border-bottom: 1px solid rgba(0, 242, 234, 0.2);">
                     <h3 class="text-sm font-bold tracking-wider" style="color: var(--primary-color);">
@@ -269,7 +257,6 @@
                 </div>
               </div>
 
-              <!-- Logs -->
               <div class="config-group-box flex flex-col h-full" style="max-height: 300px;">
                 <div class="flex justify-between items-center mb-3 pb-2" style="border-bottom: 1px solid rgba(0, 242, 234, 0.2);">
                     <h3 class="text-sm font-bold tracking-wider" style="color: var(--primary-color);">
@@ -297,9 +284,105 @@
       </div>
     </section>
 
+    <section class="content-panel panel-watermark">
+      <div class="glitch-card">
+        <div class="card-header">
+          <div class="card-title"><span>[TOOL] IMAGE_WATERMARKER</span></div>
+          <div class="card-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="card-body">
+          <p class="panel-placeholder mb-6" style="color: var(--primary-color); opacity: 0.8;">> MODULE_DESC: Cryptographic watermarking utility for appending timestamped text overlays to evidentiary images.</p>
+
+          <div class="watermark-grid">
+            
+            <div class="picker-col-data flex flex-col gap-4">
+              
+              <div class="cyber-dropzone p-4" id="zone-watermark">
+                <input type="file" id="wm-image-input" class="hidden-input" accept="image/jpeg, image/png, image/jpg">
+                <div class="dropzone-label">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                  <span class="main-prompt mt-2" style="font-size: 0.85rem;">[ MOUNT_IMAGE_TARGET ]</span>
+                  <span class="allowed-tag">ALLOWED: .JPG | .PNG</span>
+                </div>
+              </div>
+              <div id="warn-watermark" class="sys-alert hidden"></div>
+
+              <div class="config-group-box flex flex-col gap-5">
+                
+                <div class="form-group mb-0" style="max-width: 100%;">
+                  <input type="text" id="wm-text-input" value="CONFIDENTIAL" placeholder=" ">
+                  <label for="wm-text-input" class="form-label">WATERMARK_STRING</label>
+                </div>
+
+                <div class="pass-config-grid mb-0">
+                  <div class="form-group mb-0" style="max-width: 100%;">
+                    <select id="wm-orientation" class="custom-select">
+                      <option value="horizontal">HORIZONTAL (-)</option>
+                      <option value="vertical">VERTICAL (|)</option>
+                      <option value="diagonal-up">DIAGONAL_UP (/)</option>
+                      <option value="diagonal-down">DIAGONAL_DOWN (\)</option>
+                    </select>
+                    <label class="form-label select-label">ORIENTATION</label>
+                  </div>
+                  <div class="form-group mb-0" style="max-width: 100%;">
+                    <select id="wm-pattern" class="custom-select">
+                      <option value="single">SINGLE_CENTER</option>
+                      <option value="multi" selected>MULTI_REPEATED</option>
+                    </select>
+                    <label class="form-label select-label">PATTERN</label>
+                  </div>
+                </div>
+
+                <div class="pass-config-grid mb-0">
+                  <div class="form-group mb-0 flex flex-col justify-end" style="max-width: 100%;">
+                    <label class="form-label select-label" style="top: -1.3em;">HEX_COLOR (<span id="wm-color-hex" style="color:var(--text-main);">#00F2EA</span>)</label>
+                    <input type="color" id="wm-color" value="#00F2EA" style="height: 35px; padding: 0; cursor: pointer; border:none; width: 100%;">
+                  </div>
+                  <div class="form-group mb-0 flex flex-col justify-end" style="max-width: 100%;">
+                    <label class="form-label select-label" style="top: -1.3em;">OPACITY (<span id="wm-opacity-val" style="color:var(--text-main);">40</span>%)</label>
+                    <input type="range" id="wm-opacity" min="1" max="100" value="40" class="custom-range" style="margin-bottom: 8px;">
+                  </div>
+                </div>
+
+                <div class="form-group mb-2 flex flex-col justify-end" style="max-width: 100%;">
+                  <label class="form-label select-label" style="top: -1.3em;">FONT_SIZE (<span id="wm-size-val" style="color:var(--text-main);">48</span>px)</label>
+                  <input type="range" id="wm-size" min="10" max="300" value="48" class="custom-range" style="margin-bottom: 8px;">
+                </div>
+
+                <button id="wm-download-btn" disabled class="socterminal-btn full-width" style="opacity: 0.3;">
+                  <span></span><span></span><span></span><span></span>
+                  <span class="btn-text">EXECUTE_DOWNLOAD</span>
+                </button>
+              </div>
+
+            </div>
+
+            <div class="picker-col-canvas flex flex-col gap-4">
+              <div class="status-bar-picker flex justify-between">
+                <span>
+                  <svg style="display:inline; margin-right:4px;" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg> 
+                  [ OUTPUT_PREVIEW ]
+                </span>
+                <span id="wm-live-time" style="font-weight:bold; color:var(--secondary-color); font-size: 0.7rem;">WAITING_FOR_IMAGE</span>
+              </div>
+
+              <div class="canvas-wrapper relative w-full flex items-center justify-center p-4 bg-[#030a05]" style="min-height: 500px;">
+                <div id="wm-placeholder" class="text-center opacity-40 flex flex-col items-center">
+                  <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="mb-4 animate-pulse"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                  <p class="text-sm font-bold tracking-widest uppercase">> NO_TARGET_DETECTED</p>
+                </div>
+                <canvas id="wm-canvas" class="hidden shadow-xl" style="max-height: 65vh; max-width: 100%; border: 1px solid rgba(0,242,234,0.3);"></canvas>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- Modal Target Acquired -->
   <div id="modalPemenang" class="fixed-modal hidden">
     <div class="modal-content glitch-card">
         <div class="text-[10px] text-left opacity-50 mb-2 font-mono" style="color: var(--primary-color);">
