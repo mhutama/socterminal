@@ -635,3 +635,172 @@ window.addEventListener('DOMContentLoaded', () => {
     renderUI();
     animateLoop();
 });
+
+// ==========================================
+// IMAGE WATERMARKER ENGINE
+// ==========================================
+const wmCanvas = document.getElementById('wm-canvas');
+const wmCtx = wmCanvas ? wmCanvas.getContext('2d') : null;
+const wmPlaceholder = document.getElementById('wm-placeholder');
+const wmTextInput = document.getElementById('wm-text-input');
+const wmOrientation = document.getElementById('wm-orientation');
+const wmPattern = document.getElementById('wm-pattern');
+const wmColor = document.getElementById('wm-color');
+const wmColorHex = document.getElementById('wm-color-hex');
+const wmOpacity = document.getElementById('wm-opacity');
+const wmOpacityVal = document.getElementById('wm-opacity-val');
+const wmSize = document.getElementById('wm-size');
+const wmSizeVal = document.getElementById('wm-size-val');
+const wmDownloadBtn = document.getElementById('wm-download-btn');
+const wmLiveTime = document.getElementById('wm-live-time');
+
+let currentImageWM = null;
+
+// Format Time Konsisten dengan Jam Sistem Footer
+function getWMFormattedTimestamp() {
+    const date = new Date();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const d = String(date.getDate()).padStart(2, '0');
+    const m = months[date.getMonth()];
+    const y = date.getFullYear();
+    const h = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    const s = String(date.getSeconds()).padStart(2, '0');
+    return `${d}-${m}-${y} ${h}:${min}:${s}`;
+}
+
+function updateWMCanvas() {
+    if (!currentImageWM || !wmCtx) return;
+
+    wmCanvas.width = currentImageWM.width;
+    wmCanvas.height = currentImageWM.height;
+    wmCtx.drawImage(currentImageWM, 0, 0);
+
+    const text = wmTextInput.value.trim();
+    const size = parseInt(wmSize.value) || 48;
+    const color = wmColor.value;
+    const timestamp = getWMFormattedTimestamp();
+
+    wmLiveTime.textContent = timestamp.replace(' ', ' // ');
+
+    const watermarkText = text ? `${text} @ ${timestamp}` : timestamp;
+
+    // Font monospaced system SOC 
+    wmCtx.font = `bold ${size}px ui-monospace, SFMono-Regular, "SF Pro Mono", monospace`;
+    wmCtx.fillStyle = color;
+    wmCtx.globalAlpha = parseInt(wmOpacity.value) / 100;
+    
+    // Efek glow text terminal
+    wmCtx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+    wmCtx.shadowBlur = Math.max(5, size / 5);
+    wmCtx.shadowOffsetX = Math.max(2, size / 20);
+    wmCtx.shadowOffsetY = Math.max(2, size / 20);
+
+    const orientation = wmOrientation.value;
+    const pattern = wmPattern.value;
+
+    wmCtx.save();
+    wmCtx.translate(wmCanvas.width / 2, wmCanvas.height / 2);
+    wmCtx.textAlign = 'center';
+    wmCtx.textBaseline = 'middle';
+    
+    let angle = 0;
+    if (orientation === 'vertical') angle = -Math.PI / 2;
+    else if (orientation === 'diagonal-up') angle = -Math.PI / 4;
+    else if (orientation === 'diagonal-down') angle = Math.PI / 4;
+    wmCtx.rotate(angle);
+    
+    if (pattern === 'multi') {
+        const textMetrics = wmCtx.measureText(watermarkText);
+        const textWidth = textMetrics.width;
+        const diag = Math.sqrt(wmCanvas.width * wmCanvas.width + wmCanvas.height * wmCanvas.height); 
+        
+        const stepX = textWidth + (size * 1.5); 
+        const stepY = size * 3;                 
+
+        let rowIdx = 0;
+        for (let y = -diag; y <= diag; y += stepY) {
+            let offsetX = (rowIdx % 2 === 0) ? 0 : (stepX / 2);
+            for (let x = -diag; x <= diag + stepX; x += stepX) {
+                wmCtx.fillText(watermarkText, x - offsetX, y);
+            }
+            rowIdx++;
+        }
+    } else {
+        wmCtx.fillText(watermarkText, 0, 0);
+    }
+
+    wmCtx.restore();
+    wmCtx.globalAlpha = 1.0;
+}
+
+// Attach Dropzone specifically for Image Watermarker
+window.addEventListener('DOMContentLoaded', () => {
+    initSecureDropzone({
+        zoneId: 'zone-watermark',
+        inputId: 'wm-image-input',
+        warnId: 'warn-watermark',
+        allowedExts: ['.jpeg', '.jpg', '.png'],
+        onSuccess: (files) => {
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    currentImageWM = img;
+                    wmPlaceholder.classList.add('hidden');
+                    wmCanvas.classList.remove('hidden');
+                    
+                    wmDownloadBtn.disabled = false;
+                    wmDownloadBtn.style.opacity = '1';
+                    
+                    updateWMCanvas();
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    if (wmTextInput) {
+        wmTextInput.addEventListener('input', updateWMCanvas);
+        wmOrientation.addEventListener('change', updateWMCanvas);
+        wmPattern.addEventListener('change', updateWMCanvas);
+        
+        wmColor.addEventListener('input', (e) => {
+            wmColorHex.textContent = e.target.value.toUpperCase();
+            updateWMCanvas();
+        });
+
+        wmSize.addEventListener('input', (e) => {
+            wmSizeVal.textContent = e.target.value;
+            updateWMCanvas();
+        });
+
+        wmOpacity.addEventListener('input', (e) => {
+            wmOpacityVal.textContent = e.target.value;
+            updateWMCanvas();
+        });
+
+        wmDownloadBtn.addEventListener('click', () => {
+            if (!currentImageWM) return;
+            updateWMCanvas(); 
+
+            // Formatting naming time file
+            const date = new Date();
+            const ts = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}-${String(date.getHours()).padStart(2,'0')}${String(date.getMinutes()).padStart(2,'0')}${String(date.getSeconds()).padStart(2,'0')}`;
+            
+            const link = document.createElement('a');
+            link.download = `SOCTERM_WATERMARK_${ts}.png`;
+            link.href = wmCanvas.toDataURL('image/png', 1.0); 
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Real-time canvas timestamp sync
+        setInterval(() => {
+            if (currentImageWM) updateWMCanvas();
+        }, 1000);
+    }
+});
