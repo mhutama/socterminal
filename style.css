@@ -71,7 +71,7 @@ ul.list-reset { list-style: none; margin: 0; padding: 0; }
 .pass-input-row {
   display: flex;
   flex-direction: row;
-  align-items: flex-end; /* Sejajarkan bagian bawah elemen */
+  align-items: flex-end;
   gap: 1.5rem;
   margin-bottom: 2rem;
   background: rgba(0, 0, 0, 0.4);
@@ -88,10 +88,10 @@ ul.list-reset { list-style: none; margin: 0; padding: 0; }
   display: flex;
   align-items: center;
   margin-bottom: 0;
-  padding-bottom: 0.3rem; /* Mengimbangi baseline input text */
+  padding-bottom: 0.3rem;
 }
 
-/* Section Output (Stack Vertikal) */
+/* Section Output */
 .pass-output-stack {
   display: flex;
   flex-direction: column;
@@ -101,15 +101,23 @@ ul.list-reset { list-style: none; margin: 0; padding: 0; }
   border-radius: 4px;
 }
 
-.pass-output-box {
+.pass-output-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 1.5rem;
   width: 100%;
+}
+
+.pass-output-box {
+  flex: 1;
+  max-width: 110ch; /* Perfectly scales the yellow line to 110 characters */
   margin-bottom: 0 !important;
   position: relative;
 }
 
-/* Penyesuaian Font Size agar menampung 100 Karakter */
 .pass-output-box input {
-  font-size: 1.1rem !important; /* Diperkecil agar muat panjang */
+  font-size: 1.1rem !important; 
   height: 3.5rem;
   padding: 0.5rem 3.5rem 0.5rem 0 !important; 
   letter-spacing: 0.05em; 
@@ -136,12 +144,23 @@ ul.list-reset { list-style: none; margin: 0; padding: 0; }
   transform: scale(1.3); 
 }
 
+#generate-pass-btn {
+  height: 3.5rem;
+  margin-bottom: 0;
+  min-width: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Responsivitas Mobile */
 @media (max-width: 768px) {
-  .pass-input-row {
+  .pass-input-row, .pass-output-row {
     flex-direction: column;
     align-items: stretch;
     gap: 1.5rem;
+  }
+  .pass-input-row {
     padding: 1.5rem;
   }
   .pass-input-row .flex-center {
@@ -149,6 +168,9 @@ ul.list-reset { list-style: none; margin: 0; padding: 0; }
   }
   .pass-output-box input { 
     font-size: 0.9rem !important; 
+  }
+  #generate-pass-btn {
+    width: 100%;
   }
 }
 
