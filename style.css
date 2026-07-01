@@ -111,7 +111,7 @@ ul.list-reset { list-style: none; margin: 0; padding: 0; }
 
 .pass-output-box {
   flex: 1;
-  max-width: 123ch; /* Perfectly scales the yellow line to 123 characters */
+  max-width: 130ch; /* Perfectly scales the yellow line to 130 characters */
   margin-bottom: 0 !important;
   position: relative;
 }
