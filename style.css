@@ -63,40 +63,94 @@ ul.list-reset { list-style: none; margin: 0; padding: 0; }
 @keyframes chase-left { 0% { bottom: -100%; } 50%, 100% { bottom: 100%; } }
 .socterminal-btn .btn-text { position: relative; z-index: 2; }
 
-/* REVISED: 2X Size Pass Generator Output Layout & Alignment Fix */
-.pass-output-container { 
-  display: flex; 
-  gap: 1.5rem; 
-  align-items: flex-end; /* Memastikan bagian bawah elemen sejajar sempurna */
-  margin-top: 2rem; 
-  margin-bottom: 1rem; 
+/* =========================================
+   REVISED PASS GENERATOR LAYOUT
+   ========================================= */
+
+/* Section Input (1 Row) */
+.pass-input-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 242, 234, 0.15);
+  padding: 1.5rem 2rem;
+  border-radius: 4px;
 }
 
-.pass-output-box { 
-  flex: 2; 
-  min-width: 0; 
-  position: relative; 
-  margin-bottom: 0 !important; /* Menghapus margin-bottom bawaan dari .form-group */
+.pass-input-row .form-group {
+  margin-bottom: 0;
+  flex: 1;
 }
 
-.pass-output-box input { 
+.pass-input-row .flex-center {
+  display: flex;
+  align-items: center;
+  flex: 2;
+  margin-bottom: 0;
+  padding-top: 0.8rem; /* Menyejajarkan checkbox dengan garis input */
+}
+
+/* Section Output (Stack Vertikal) */
+.pass-output-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pass-output-box {
+  width: 100%;
+  margin-bottom: 0 !important;
+}
+
+.pass-output-box input {
   font-size: 1.8rem !important; 
-  height: 4.5rem; /* Tinggi kotak input di-set persis sama dengan tombol */
+  height: 4.5rem;
   padding: 0.5rem 3rem 0.5rem 0 !important; 
   letter-spacing: 0.05em; 
   font-weight: 700; 
   box-sizing: border-box;
+  width: 100%;
 }
 
-.generate-btn-massive { 
-  flex: 1; 
-  height: 4.5rem; /* Tinggi tombol di-set persis sama dengan kotak input */
-  font-size: 1.4rem !important; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  margin: 0; 
-  box-sizing: border-box;
+/* Label Karakter */
+.char-count-display {
+  text-align: right;
+  padding-right: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Tombol Generate */
+.generate-btn-massive {
+  width: 100%;
+  height: 4.5rem;
+  font-size: 1.4rem !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Responsivitas Mobile */
+@media (max-width: 768px) {
+  .pass-input-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  .pass-input-row .flex-center {
+    padding-top: 0;
+  }
+  .pass-output-box input { 
+    font-size: 1.4rem !important; 
+    height: 3.5rem; 
+  }
+  .generate-btn-massive { 
+    height: 3.5rem; 
+    font-size: 1.2rem !important; 
+  }
 }
 
 .copy-btn { 
