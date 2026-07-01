@@ -144,7 +144,11 @@ document.getElementById('generate-pass-btn').addEventListener('click', () => {
     if (wordsArray.length === 0) return;
 
     const wordCount = parseInt(document.getElementById('pass-words').value) || 3;
-    const minLength = Math.min(Math.max(parseInt(document.getElementById('pass-min-length').value) || 16, 8), 64);
+    
+    // Hard limit maksimum 100 karakter
+    let rawMaxLen = parseInt(document.getElementById('pass-max-length').value) || 32;
+    const maxLength = Math.min(Math.max(rawMaxLen, 8), 100);
+    
     const useSeparator = document.getElementById('pass-sep-special').checked;
     const specialChars = "!@#$%^&*_-+=?";
     const getRandomSpecial = () => specialChars[Math.floor(Math.random() * specialChars.length)];
@@ -153,52 +157,60 @@ document.getElementById('generate-pass-btn').addEventListener('click', () => {
     let selectedWords = [];
     let totalLength = 0;
 
-    while (selectedWords.length < wordCount || totalLength < minLength) {
+    // Logika pemilihan kata
+    while (selectedWords.length < wordCount) {
         const randomIdx = Math.floor(Math.random() * wordsArray.length);
         let w = wordsArray[randomIdx].trim().toLowerCase();
         let chars = w.split('');
 
-        // 1. Mandatory Leetspeak on 1 random vowel
+        // 1. Mandatory Leetspeak
         let vowelIndices = [];
-        for(let j=0; j<chars.length; j++) {
-            if(/[aeio]/.test(chars[j])) vowelIndices.push(j);
-        }
+        for(let j=0; j<chars.length; j++) if(/[aeio]/.test(chars[j])) vowelIndices.push(j);
         if(vowelIndices.length > 0) {
             let vIdx = vowelIndices[Math.floor(Math.random() * vowelIndices.length)];
             chars[vIdx] = leetMap[chars[vIdx]];
         }
 
-        // 2. Mandatory Reverse Caesar on 1 random letter
+        // 2. Mandatory Reverse Caesar
         let letterIndices = [];
-        for(let j=0; j<chars.length; j++) {
-            if(/[a-z]/.test(chars[j])) letterIndices.push(j);
-        }
+        for(let j=0; j<chars.length; j++) if(/[a-z]/.test(chars[j])) letterIndices.push(j);
         if(letterIndices.length > 0) {
             let cIdx = letterIndices[Math.floor(Math.random() * letterIndices.length)];
             chars[cIdx] = applyReverseCaesar(chars[cIdx]);
         }
 
-        // 3. Mandatory Uppercase on 1 random letter
+        // 3. Mandatory Uppercase
         letterIndices = [];
-        for(let j=0; j<chars.length; j++) {
-            if(/[a-z]/.test(chars[j])) letterIndices.push(j);
-        }
+        for(let j=0; j<chars.length; j++) if(/[a-z]/.test(chars[j])) letterIndices.push(j);
         if(letterIndices.length > 0) {
             let uIdx = letterIndices[Math.floor(Math.random() * letterIndices.length)];
             chars[uIdx] = chars[uIdx].toUpperCase();
         }
 
-        selectedWords.push(chars.join(''));
-        const projectedSepChars = useSeparator ? Math.max(0, selectedWords.length - 1) : 0;
-        totalLength = selectedWords.join('').length + projectedSepChars;
+        const assembledWord = chars.join('');
+        const projectedSepChars = useSeparator ? Math.max(0, selectedWords.length) : 0;
+        
+        // Hentikan penambahan kata jika akan melampaui Max_Length (namun pastikan minimal ada 1 kata)
+        if (totalLength + assembledWord.length + projectedSepChars > maxLength && selectedWords.length > 0) {
+            break;
+        }
+
+        selectedWords.push(assembledWord);
+        totalLength += assembledWord.length;
     }
 
+    // Penyatuan frasa
     let phrase = useSeparator 
       ? selectedWords.reduce((acc, word, idx) => idx === 0 ? word : acc + getRandomSpecial() + word, '') 
       : selectedWords.join('');
 
     // Scrub dictionary spaces
     phrase = phrase.replace(/\s/g, () => getRandomSpecial());
+
+    // Failsafe pemotongan string jika melewati Max Length 
+    if (phrase.length > maxLength) {
+        phrase = phrase.substring(0, maxLength);
+    }
 
     document.getElementById('pass-output').value = phrase;
     document.getElementById('pass-length-display').textContent = `[${phrase.length} CHARS]`;
