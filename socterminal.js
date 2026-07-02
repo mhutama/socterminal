@@ -230,7 +230,7 @@ document.getElementById('copy-pass-btn').addEventListener('click', () => {
 
 
 // ==========================================
-// RANDOM PICKER ENGINE (Arisan Data Stream)
+// RANDOM PICKER ENGINE
 // ==========================================
 let peserta = ["ROOT_USER", "SYS_ADMIN", "GUEST_01", "CYBER_NINJA", "NEO", "TRINITY"];
 let pemenang = [];
@@ -485,11 +485,37 @@ function animateLoop() {
     requestAnimationFrame(animateLoop);
 }
 
+function updateStatusUI() {
+    const statusEl = document.getElementById('recStatus');
+    const btn = document.getElementById('btnKocok');
+    
+    if (animState === 'IDLE') {
+        statusEl.textContent = 'IDLE';
+        statusEl.style.color = 'var(--primary-color)';
+        btn.disabled = false;
+        btn.querySelector('.btn-text').textContent = 'RANDOM PICKER';
+        btn.style.opacity = '1';
+    } else if (animState === 'SCRAMBLE') {
+        statusEl.textContent = 'SCRAMBLING_DATA...';
+        statusEl.style.color = 'var(--secondary-color)';
+        btn.disabled = true;
+        btn.querySelector('.btn-text').textContent = 'PROCESSING...';
+        btn.style.opacity = '0.5';
+    } else if (animState === 'SCANNING') {
+        statusEl.textContent = 'ISOLATING_TARGET...';
+        statusEl.style.color = 'var(--secondary-color)';
+    }
+}
+
 document.getElementById('btnKocok').addEventListener('click', () => {
     initAudio(); 
     let durasi = parseInt(document.getElementById('inputDurasi').value);
-    if (isNaN(durasi) || durasi < 3) durasi = 3; 
+    
+    // Hard Limit Durasi: Minimal 1, Maksimal 99
+    if (isNaN(durasi) || durasi < 1) durasi = 3; 
+    if (durasi > 99) durasi = 99;
     document.getElementById('inputDurasi').value = durasi; 
+    
     targetScrambleFrames = durasi * 60; 
 
     const pesertaAktif = peserta.filter(p => !pemenang.includes(p));
@@ -573,20 +599,33 @@ function renderUI() {
     initTags();
 }
 
-document.getElementById('inputNama').addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') document.getElementById('btnSimpan').click();
+// Filter Input: Hanya a-z, A-Z, 0-9, @, koma, dan _
+document.getElementById('inputNama').addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/[^a-zA-Z0-9@,_-]/g, '');
 });
 
+// Eksekusi Simpan Input
 document.getElementById('btnSimpan').addEventListener('click', () => {
     const input = document.getElementById('inputNama');
-    let nama = input.value.trim().toUpperCase().replace(/\s+/g, '_');
-    if (nama.length > 20) nama = nama.substring(0, 20);
-    if (!nama) return;
-    if (peserta.includes(nama)) return; // Simple deduplication block
-    peserta.push(nama);
-    playSound('type');
-    input.value = '';
-    renderUI();
+    let rawVal = input.value.trim().toUpperCase();
+    
+    // Mendukung input masal jika user memakai koma
+    let newNames = rawVal.split(',').map(n => n.trim()).filter(n => n.length > 0);
+    let added = false;
+
+    newNames.forEach(nama => {
+        if (nama.length > 20) nama = nama.substring(0, 20);
+        if (!peserta.includes(nama)) {
+            peserta.push(nama);
+            added = true;
+        }
+    });
+
+    if (added) {
+        playSound('type');
+        input.value = '';
+        renderUI();
+    }
 });
 
 document.getElementById('btnPurge').addEventListener('click', () => {
